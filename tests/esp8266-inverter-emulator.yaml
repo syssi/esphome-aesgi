@@ -1,0 +1,67 @@
+substitutions:
+  name: aesgi-emu
+  tx_pin: GPIO4
+  rx_pin: GPIO5
+
+esphome:
+  name: ${name}
+
+esp8266:
+  board: d1_mini
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+ota:
+  platform: esphome
+
+logger:
+  level: DEBUG
+
+api:
+  reboot_timeout: 0s
+
+uart:
+  id: uart_0
+  baud_rate: 9600
+  tx_pin: ${tx_pin}
+  rx_pin: ${rx_pin}
+  debug:
+    direction: BOTH
+    dummy_receiver: true
+    after:
+      delimiter: "\r"
+    sequence:
+      - lambda: UARTDebug::log_string(direction, bytes);
+      - lambda:
+          std::string request(bytes.begin(), bytes.end());
+          if(request == "#290\r") {
+            id(uart_0).write_str("\n*290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r");
+            return;
+          }
+          if(request == "#299\r") {
+            id(uart_0).write_str("\n*299 PV350W \xA3\r");
+            return;
+          }
+          if(request == "#29L\r") {
+            id(uart_0).write_str("\n*29L 100 \xB2\r");
+            return;
+          }
+          if(request == "#29P\r") {
+            id(uart_0).write_str("\n*29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r");
+            return;
+          }
+          if(request == "#29F\r") {
+            id(uart_0).write_str("\n*29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r");
+            return;
+          }
+          if(request == "#29S\r") {
+            id(uart_0).write_str("\n*29S 11.5 \xED\r");
+            return;
+          }
+          if(request == "#29B\r") {
+            id(uart_0).write_str("\n*29B 0 20.0 \'\r");
+            return;
+          }
+          ESP_LOGD("Lambda", "Unhandled request %s", request.c_str());
