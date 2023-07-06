@@ -1,0 +1,67 @@
+substitutions:
+  name: aesgi-emu
+  tx_pin: GPIO4
+  rx_pin: GPIO5
+
+esphome:
+  name: ${name}
+
+esp8266:
+  board: d1_mini
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+ota:
+
+logger:
+  level: DEBUG
+
+api:
+  reboot_timeout: 0s
+
+uart:
+  id: uart_0
+  baud_rate: 9600
+  tx_pin: ${tx_pin}
+  rx_pin: ${rx_pin}
+  debug:
+    direction: BOTH
+    dummy_receiver: true
+    after:
+      delimiter: "\r"
+    sequence:
+      - lambda: UARTDebug::log_string(direction, bytes);
+      # @FIXME: Add valid checksums
+      - lambda:
+          std::string request(bytes.begin(), bytes.end());
+          if(request == "#010\r") {
+            id(uart_0).write_str("\n*010___0_45.7_1.23____55_230.1_0.21____50_45___635_z\r");
+            return;
+          }
+          if(request == "#019\r") {
+            id(uart_0).write_str("\n*019_PV350W_z\r");
+            return;
+          }
+          if(request == "#01L\r") {
+            id(uart_0).write_str("Unknown\r");
+            return;
+          }
+          if(request == "#01P\r") {
+            id(uart_0).write_str("Unknown\r");
+            return;
+          }
+          if(request == "#01F\r") {
+            id(uart_0).write_str("Unknown\r");
+            return;
+          }
+          if(request == "#01S\r") {
+            id(uart_0).write_str("Unknown\r");
+            return;
+          }
+          if(request == "#01B\r") {
+            id(uart_0).write_str("Unknown\r");
+            return;
+          }
+          ESP_LOGD("Lambda", "Unhandled request %s", request.c_str());
