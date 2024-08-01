@@ -8,6 +8,9 @@ on:  # yamllint disable-line rule:truthy
   schedule:
     - cron: 0 12 * * *
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
   yamllint:
     runs-on: ubuntu-latest
@@ -191,7 +194,10 @@ jobs:
         shell: bash
         run: 'echo -e "wifi_ssid: ssid\nwifi_password: password\nmqtt_host: host\nmqtt_username: username\nmqtt_password: password" > tests/secrets.yaml'
       - run: |
-          esphome -s external_components_source components config tests/esp8266-query-data.yaml
+          for YAML in tests/esp*.yaml; do
+            esphome -s external_components_source ../components config $YAML >/dev/null
+          done
+
 
   esphome-compile:
     runs-on: ubuntu-latest
@@ -232,4 +238,6 @@ jobs:
         shell: bash
         run: 'echo -e "wifi_ssid: ssid\nwifi_password: password\nmqtt_host: host\nmqtt_username: username\nmqtt_password: password" > tests/secrets.yaml'
       - run: |
-          esphome -s external_components_source components config tests/esp8266-query-data.yaml
+          for YAML in tests/esp*.yaml; do
+            esphome -s external_components_source ../components compile $YAML
+          done
