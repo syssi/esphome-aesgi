@@ -23,6 +23,9 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     case 'L':
       this->on_output_power_data_(data);
       break;
+    case 'A':
+      ESP_LOGI(TAG, "Auto test response (%zu bytes) received: %s", data.size(), data.c_str());
+      break;
     case 'P':
       this->on_settings_data_(data);
       break;
@@ -61,8 +64,8 @@ void Aesgi::on_status_data_(const std::string &data) {
   int energy_today;
 
   // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-  int result = sscanf(data.c_str(), "*%d %d %f %f %d %f %f %d %d %d", &skipped, &status, &dc_voltage, &dc_current,
-                      &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
+  sscanf(data.c_str(), "*%d %d %f %f %d %f %f %d %d %d", &skipped, &status, &dc_voltage, &dc_current, &dc_power,
+         &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
 
   this->publish_state_(this->status_sensor_, status);
   this->publish_state_(this->dc_voltage_sensor_, dc_voltage);
@@ -75,8 +78,8 @@ void Aesgi::on_status_data_(const std::string &data) {
   this->publish_state_(this->energy_today_sensor_, energy_today);
 }
 
-void Aesgi::on_output_power_data_(const std::string &data) {}
 void Aesgi::on_device_type_data_(const std::string &data) {}
+void Aesgi::on_output_power_data_(const std::string &data) {}
 void Aesgi::on_settings_data_(const std::string &data) {}
 void Aesgi::on_errors_data_(const std::string &data) {}
 void Aesgi::on_output_current_data_(const std::string &data) {}
