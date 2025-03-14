@@ -86,6 +86,12 @@ sensor:
       name: "${name} device temperature"
     energy_today:
       name: "${name} energy today"
+    output_power:
+      name: "${name} output power"
+    current_limit:
+      name: "${name} current limit"
+    voltage_limit:
+      name: "${name} voltage limit"
 
 text_sensor:
   - platform: aesgi

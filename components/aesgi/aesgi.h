@@ -26,6 +26,9 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
     device_temperature_sensor_ = device_temperature_sensor;
   }
   void set_energy_today_sensor(sensor::Sensor *energy_today_sensor) { energy_today_sensor_ = energy_today_sensor; }
+  void set_output_power_sensor(sensor::Sensor *output_power_sensor) { output_power_sensor_ = output_power_sensor; }
+  void set_current_limit_sensor(sensor::Sensor *current_limit_sensor) { current_limit_sensor_ = current_limit_sensor; }
+  void set_voltage_limit_sensor(sensor::Sensor *voltage_limit_sensor) { voltage_limit_sensor_ = voltage_limit_sensor; }
 
   void set_errors_text_sensor(text_sensor::TextSensor *errors_text_sensor) { errors_text_sensor_ = errors_text_sensor; }
   void set_operation_mode_text_sensor(text_sensor::TextSensor *operation_mode_text_sensor) {
@@ -53,19 +56,23 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   sensor::Sensor *ac_power_sensor_;
   sensor::Sensor *device_temperature_sensor_;
   sensor::Sensor *energy_today_sensor_;
+  sensor::Sensor *output_power_sensor_;
+  sensor::Sensor *current_limit_sensor_;
+  sensor::Sensor *voltage_limit_sensor_;
 
   text_sensor::TextSensor *operation_mode_text_sensor_;
   text_sensor::TextSensor *errors_text_sensor_;
   text_sensor::TextSensor *device_type_text_sensor_;
 
   uint8_t no_response_count_{0};
+  uint8_t next_command_{7};
 
   void on_status_data_(const std::string &data);
   void on_device_type_data_(const std::string &data);
   void on_output_power_data_(const std::string &data);
   void on_settings_data_(const std::string &data);
   void on_errors_data_(const std::string &data);
-  void on_output_current_data_(const std::string &data);
+  void on_current_limit_data_(const std::string &data);
   void on_operation_mode_data_(const std::string &data);
 
   void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);
