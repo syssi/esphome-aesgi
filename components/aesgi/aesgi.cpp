@@ -10,13 +10,19 @@ static const char *const TAG = "aesgi";
 static const uint8_t MAX_NO_RESPONSE_COUNT = 5;
 
 static const uint8_t AESGI_COMMAND_STATUS = '0';
-static const uint8_t AESGI_COMMAND_DEVICE_TYPE = = '9';
+static const uint8_t AESGI_COMMAND_DEVICE_TYPE = '9';
 static const uint8_t AESGI_COMMAND_OUTPUT_POWER = 'L';
 static const uint8_t AESGI_COMMAND_AUTO_TEST = 'A';
 static const uint8_t AESGI_COMMAND_SETTINGS = 'P';
 static const uint8_t AESGI_COMMAND_ERRORS = 'F';
 static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
+
+static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 5;
+static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
+    AESGI_COMMAND_STATUS, AESGI_COMMAND_DEVICE_TYPE,    AESGI_COMMAND_SETTINGS,
+    AESGI_COMMAND_ERRORS, AESGI_COMMAND_OPERATION_MODE,
+};
 
 void Aesgi::on_aesgi_rs485_data(const std::string &data) {
   this->reset_online_status_tracker_();
@@ -51,6 +57,11 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     default:
       ESP_LOGW(TAG, "Unhandled response (%zu bytes) received: %s", data.size(), data.c_str());
   }
+
+  // Send next command after each received frame
+  if (this->next_command_ < AESGI_COMMAND_QUEUE_SIZE) {
+    this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % AESGI_COMMAND_QUEUE_SIZE]);
+  }
 }
 
 void Aesgi::on_status_data_(const std::string &data) {
@@ -61,7 +72,6 @@ void Aesgi::on_status_data_(const std::string &data) {
 
   ESP_LOGI(TAG, "Status frame received (%zu bytes)", data.size());
 
-  int skipped;
   int status;
   float dc_voltage;
   float dc_current;
@@ -73,11 +83,10 @@ void Aesgi::on_status_data_(const std::string &data) {
   int energy_today;
 
   // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-  int ret =
-      sscanf(data.c_str(), "*%d %d %f %f %d %f %f %d %d %d", &skipped, &status, &dc_voltage, &dc_current,  // NOLINT
-             &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
+  int ret = sscanf(data.c_str(), "*%*d %d %f %f %d %f %f %d %d %d", &status, &dc_voltage, &dc_current,  // NOLINT
+                   &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
 
-  if (ret != 10) {
+  if (ret != 9) {
     ESP_LOGE(TAG, "Parsing status response failed: %s", data.c_str());
     return;
   }
@@ -93,7 +102,18 @@ void Aesgi::on_status_data_(const std::string &data) {
   this->publish_state_(this->energy_today_sensor_, energy_today);
 }
 
-void Aesgi::on_device_type_data_(const std::string &data) {}
+void Aesgi::on_device_type_data_(const std::string &data) {
+  ESP_LOGI(TAG, "Device type frame received (%zu bytes)", data.size());
+
+  char device_type[6];
+  if (sscanf(data.c_str(), "*%*s %6s", device_type) != 1) {
+    ESP_LOGE(TAG, "Parsing status response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->device_type_text_sensor_, device_type);
+}
+
 void Aesgi::on_output_power_data_(const std::string &data) {}
 void Aesgi::on_settings_data_(const std::string &data) {}
 void Aesgi::on_errors_data_(const std::string &data) {}
@@ -102,7 +122,17 @@ void Aesgi::on_operation_mode_data_(const std::string &data) {}
 
 void Aesgi::update() {
   this->track_online_status_();
-  this->send('0');
+
+  // Loop through all commands if connected
+  if (this->next_command_ != AESGI_COMMAND_QUEUE_SIZE) {
+    ESP_LOGW(TAG,
+             "Command queue (%d of %d) was not completely processed. "
+             "Please increase the update_interval if you see this warning frequently",
+             this->next_command_ + 1, AESGI_COMMAND_QUEUE_SIZE);
+  }
+  this->next_command_ = 0;
+
+  this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % AESGI_COMMAND_QUEUE_SIZE]);
 }
 
 void Aesgi::track_online_status_() {

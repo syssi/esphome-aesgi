@@ -59,6 +59,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   text_sensor::TextSensor *device_type_text_sensor_;
 
   uint8_t no_response_count_{0};
+  uint8_t next_command_{5};
 
   void on_status_data_(const std::string &data);
   void on_device_type_data_(const std::string &data);
