@@ -18,10 +18,10 @@ static const uint8_t AESGI_COMMAND_ERRORS = 'F';
 static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
 
-static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 5;
+static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 7;
 static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
-    AESGI_COMMAND_STATUS, AESGI_COMMAND_DEVICE_TYPE,    AESGI_COMMAND_SETTINGS,
-    AESGI_COMMAND_ERRORS, AESGI_COMMAND_OPERATION_MODE,
+    AESGI_COMMAND_STATUS, AESGI_COMMAND_DEVICE_TYPE,   AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_SETTINGS,
+    AESGI_COMMAND_ERRORS, AESGI_COMMAND_CURRENT_LIMIT, AESGI_COMMAND_OPERATION_MODE,
 };
 
 void Aesgi::on_aesgi_rs485_data(const std::string &data) {
@@ -83,7 +83,7 @@ void Aesgi::on_status_data_(const std::string &data) {
   int energy_today;
 
   // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-  int ret = sscanf(data.c_str(), "*%*d %d %f %f %d %f %f %d %d %d", &status, &dc_voltage, &dc_current,  // NOLINT
+  int ret = sscanf(data.c_str(), "*%*s %d %f %f %d %f %f %d %d %d", &status, &dc_voltage, &dc_current,  // NOLINT
                    &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
 
   if (ret != 9) {
@@ -103,22 +103,92 @@ void Aesgi::on_status_data_(const std::string &data) {
 }
 
 void Aesgi::on_device_type_data_(const std::string &data) {
+  if (data.size() < 14) {
+    ESP_LOGW(TAG, "Device type frame too short. Skipping");
+    // return;
+  }
+
   ESP_LOGI(TAG, "Device type frame received (%zu bytes)", data.size());
 
   char device_type[6];
-  if (sscanf(data.c_str(), "*%*s %6s", device_type) != 1) {
-    ESP_LOGE(TAG, "Parsing status response failed: %s", data.c_str());
+
+  // *299 PV350W \xA3\r
+  if (sscanf(data.c_str(), "*%*s %6s", device_type) != 1) {  // NOLINT
+    ESP_LOGE(TAG, "Parsing device type frame response failed: %s", data.c_str());
     return;
   }
 
   this->publish_state_(this->device_type_text_sensor_, device_type);
 }
 
-void Aesgi::on_output_power_data_(const std::string &data) {}
-void Aesgi::on_settings_data_(const std::string &data) {}
-void Aesgi::on_errors_data_(const std::string &data) {}
-void Aesgi::on_current_limit_data_(const std::string &data) {}
-void Aesgi::on_operation_mode_data_(const std::string &data) {}
+void Aesgi::on_output_power_data_(const std::string &data) {
+  if (data.size() < 11) {
+    ESP_LOGW(TAG, "Output power frame too short. Skipping");
+    return;
+  }
+
+  ESP_LOGI(TAG, "Output power frame received (%zu bytes)", data.size());
+
+  int output_power;
+
+  // *29L 100 \xB2\r
+  if (sscanf(data.c_str(), "*%*s %d", &output_power) != 1) {  // NOLINT
+    ESP_LOGE(TAG, "Parsing output power response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->output_power_sensor_, (float) output_power);
+}
+
+void Aesgi::on_settings_data_(const std::string &data) {
+  // *29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r
+}
+
+void Aesgi::on_errors_data_(const std::string &data) {
+  // *29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r
+}
+
+void Aesgi::on_current_limit_data_(const std::string &data) {
+  if (data.size() < 11) {
+    ESP_LOGW(TAG, "Current limit frame too short. Skipping");
+    return;
+  }
+
+  ESP_LOGI(TAG, "Current limit frame received (%zu bytes)", data.size());
+
+  int current_limit;
+
+  // *29S 11.5 \xED\r
+  if (sscanf(data.c_str(), "*%*s %d", &current_limit) != 1) {  // NOLINT
+    ESP_LOGE(TAG, "Parsing current limit response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->current_limit_sensor_, (float) current_limit);
+}
+
+void Aesgi::on_operation_mode_data_(const std::string &data) {
+  if (data.size() < 11) {
+    ESP_LOGW(TAG, "Operation mode frame too short. Skipping");
+    return;
+  }
+
+  ESP_LOGI(TAG, "Operation mode frame received (%zu bytes)", data.size());
+
+  int operation_mode;
+  float voltage_limit;
+
+  // *29B 0 20.0 \'\r
+  if (sscanf(data.c_str(), "*%*s %d %f", &operation_mode, &voltage_limit) != 2) {  // NOLINT
+    ESP_LOGE(TAG, "Parsing operation mode response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->operation_mode_text_sensor_, operation_mode == 0   ? "MPPT"
+                                                          : operation_mode == 2 ? "Battery"
+                                                                                : "Unknown");
+  this->publish_state_(this->voltage_limit_sensor_, voltage_limit);
+}
 
 void Aesgi::update() {
   this->track_online_status_();
@@ -200,6 +270,8 @@ void Aesgi::dump_config() {  // NOLINT(google-readability-function-size,readabil
   LOG_SENSOR("", "AC power", this->ac_power_sensor_);
   LOG_SENSOR("", "Device temperature", this->device_temperature_sensor_);
   LOG_SENSOR("", "Energy today", this->energy_today_sensor_);
+  LOG_SENSOR("", "Output power", this->output_power_sensor_);
+  LOG_SENSOR("", "Current limit", this->current_limit_sensor_);
 
   LOG_TEXT_SENSOR("", "Operation mode", this->operation_mode_text_sensor_);
   LOG_TEXT_SENSOR("", "Errors", this->errors_text_sensor_);
