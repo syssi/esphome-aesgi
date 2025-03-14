@@ -64,8 +64,9 @@ void Aesgi::on_status_data_(const std::string &data) {
   int energy_today;
 
   // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-  int ret = sscanf(data.c_str(), "*%d %d %f %f %d %f %f %d %d %d", &skipped, &status, &dc_voltage, &dc_current,
-                   &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);  // NOLINT
+  int ret =
+      sscanf(data.c_str(), "*%d %d %f %f %d %f %f %d %d %d", &skipped, &status, &dc_voltage, &dc_current,  // NOLINT
+             &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
 
   if (ret != 10) {
     ESP_LOGE(TAG, "Parsing status response failed: %s", data.c_str());
