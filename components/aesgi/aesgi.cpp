@@ -105,7 +105,7 @@ void Aesgi::on_status_data_(const std::string &data) {
 void Aesgi::on_device_type_data_(const std::string &data) {
   if (data.size() < 14) {
     ESP_LOGW(TAG, "Device type frame too short. Skipping");
-    // return;
+    return;
   }
 
   ESP_LOGI(TAG, "Device type frame received (%zu bytes)", data.size());
@@ -141,15 +141,29 @@ void Aesgi::on_output_power_data_(const std::string &data) {
 }
 
 void Aesgi::on_settings_data_(const std::string &data) {
+  if (data.size() < 62) {
+    ESP_LOGW(TAG, "Settings frame too short. Skipping");
+    return;
+  }
+
+  ESP_LOGI(TAG, "Settings frame received (%zu bytes)", data.size());
+
   // *29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r
 }
 
 void Aesgi::on_errors_data_(const std::string &data) {
+  if (data.size() < 73) {
+    ESP_LOGW(TAG, "Errors frame too short. Skipping");
+    return;
+  }
+
+  ESP_LOGI(TAG, "Errors frame received (%zu bytes)", data.size());
+
   // *29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r
 }
 
 void Aesgi::on_current_limit_data_(const std::string &data) {
-  if (data.size() < 11) {
+  if (data.size() < 12) {
     ESP_LOGW(TAG, "Current limit frame too short. Skipping");
     return;
   }
@@ -168,7 +182,7 @@ void Aesgi::on_current_limit_data_(const std::string &data) {
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
-  if (data.size() < 11) {
+  if (data.size() < 14) {
     ESP_LOGW(TAG, "Operation mode frame too short. Skipping");
     return;
   }
