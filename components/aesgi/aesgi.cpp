@@ -9,33 +9,42 @@ static const char *const TAG = "aesgi";
 
 static const uint8_t MAX_NO_RESPONSE_COUNT = 5;
 
+static const uint8_t AESGI_COMMAND_STATUS = '0';
+static const uint8_t AESGI_COMMAND_DEVICE_TYPE = = '9';
+static const uint8_t AESGI_COMMAND_OUTPUT_POWER = 'L';
+static const uint8_t AESGI_COMMAND_AUTO_TEST = 'A';
+static const uint8_t AESGI_COMMAND_SETTINGS = 'P';
+static const uint8_t AESGI_COMMAND_ERRORS = 'F';
+static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
+static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
+
 void Aesgi::on_aesgi_rs485_data(const std::string &data) {
   this->reset_online_status_tracker_();
 
   uint8_t command = data[3];
   switch (command) {
-    case '0':
+    case AESGI_COMMAND_STATUS:
       this->on_status_data_(data);
       break;
-    case '9':
+    case AESGI_COMMAND_DEVICE_TYPE:
       this->on_device_type_data_(data);
       break;
-    case 'L':
+    case AESGI_COMMAND_OUTPUT_POWER:
       this->on_output_power_data_(data);
       break;
-    case 'A':
+    case AESGI_COMMAND_AUTO_TEST:
       ESP_LOGI(TAG, "Auto test response (%zu bytes) received: %s", data.size(), data.c_str());
       break;
-    case 'P':
+    case AESGI_COMMAND_SETTINGS:
       this->on_settings_data_(data);
       break;
-    case 'F':
+    case AESGI_COMMAND_ERRORS:
       this->on_errors_data_(data);
       break;
-    case 'S':
-      this->on_output_current_data_(data);
+    case AESGI_COMMAND_CURRENT_LIMIT:
+      this->on_current_limit_data_(data);
       break;
-    case 'B':
+    case AESGI_COMMAND_OPERATION_MODE:
       this->on_operation_mode_data_(data);
       break;
 

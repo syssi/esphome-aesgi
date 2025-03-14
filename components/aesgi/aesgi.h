@@ -65,7 +65,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void on_output_power_data_(const std::string &data);
   void on_settings_data_(const std::string &data);
   void on_errors_data_(const std::string &data);
-  void on_output_current_data_(const std::string &data);
+  void on_current_limit_data_(const std::string &data);
   void on_operation_mode_data_(const std::string &data);
 
   void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);
