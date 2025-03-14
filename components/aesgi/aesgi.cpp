@@ -97,7 +97,7 @@ void Aesgi::on_device_type_data_(const std::string &data) {}
 void Aesgi::on_output_power_data_(const std::string &data) {}
 void Aesgi::on_settings_data_(const std::string &data) {}
 void Aesgi::on_errors_data_(const std::string &data) {}
-void Aesgi::on_output_current_data_(const std::string &data) {}
+void Aesgi::on_current_limit_data_(const std::string &data) {}
 void Aesgi::on_operation_mode_data_(const std::string &data) {}
 
 void Aesgi::update() {
