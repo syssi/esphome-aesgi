@@ -139,7 +139,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
 
   float count_to_hertz_(int count) {
     if (count > 0) {
-      return 1502500 / count;
+      return 1502500.0f / count;
     }
 
     return NAN;
