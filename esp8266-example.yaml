@@ -81,6 +81,8 @@ number:
     aesgi_id: inverter0
     output_power_throttle:
       name: "${name} output power throttle"
+    output_power_throttle_broadcast:
+      name: "${name} output power throttle broadcast"
     battery_current_limit:
       name: "${name} battery current limit"
     battery_voltage_limit:

@@ -24,11 +24,13 @@ DEPENDENCIES = ["aesgi"]
 CODEOWNERS = ["@syssi"]
 
 CONF_OUTPUT_POWER_THROTTLE = "output_power_throttle"
+CONF_OUTPUT_POWER_THROTTLE_BROADCAST = "output_power_throttle_broadcast"
 CONF_BATTERY_VOLTAGE_LIMIT = "battery_voltage_limit"
 CONF_BATTERY_CURRENT_LIMIT = "battery_current_limit"
 
 NUMBERS = {
     CONF_OUTPUT_POWER_THROTTLE: ord("L"),
+    CONF_OUTPUT_POWER_THROTTLE_BROADCAST: ord("8"),
     CONF_BATTERY_VOLTAGE_LIMIT: ord("B"),
     CONF_BATTERY_CURRENT_LIMIT: ord("S"),
 }
@@ -50,6 +52,16 @@ AESGI_NUMBER_SCHEMA = number.NUMBER_SCHEMA.extend(
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
         cv.Optional(CONF_OUTPUT_POWER_THROTTLE): AESGI_NUMBER_SCHEMA.extend(
+            {
+                cv.Optional(
+                    CONF_UNIT_OF_MEASUREMENT, default=UNIT_PERCENT
+                ): cv.string_strict,
+                cv.Optional(CONF_MIN_VALUE, default=1.0): cv.float_,
+                cv.Optional(CONF_MAX_VALUE, default=100.0): cv.float_,
+                cv.Optional(CONF_STEP, default=1.0): cv.float_,
+            }
+        ),
+        cv.Optional(CONF_OUTPUT_POWER_THROTTLE_BROADCAST): AESGI_NUMBER_SCHEMA.extend(
             {
                 cv.Optional(
                     CONF_UNIT_OF_MEASUREMENT, default=UNIT_PERCENT

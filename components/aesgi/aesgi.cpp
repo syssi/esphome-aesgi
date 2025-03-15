@@ -146,6 +146,7 @@ void Aesgi::on_output_power_throttle_data_(const std::string &data) {
 
   this->publish_state_(this->output_power_throttle_sensor_, (float) output_power);
   this->publish_state_(this->output_power_throttle_number_, (float) output_power);
+  this->publish_state_(this->output_power_throttle_broadcast_number_, (float) output_power);
 }
 
 void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {

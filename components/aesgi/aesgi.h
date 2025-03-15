@@ -19,6 +19,9 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void set_output_power_throttle_number(number::Number *output_power_throttle_number) {
     output_power_throttle_number_ = output_power_throttle_number;
   }
+  void set_output_power_throttle_broadcast_number(number::Number *output_power_throttle_broadcast_number) {
+    output_power_throttle_broadcast_number_ = output_power_throttle_broadcast_number;
+  }
   void set_battery_current_limit_number(number::Number *battery_current_limit_number) {
     battery_current_limit_number_ = battery_current_limit_number;
   }
@@ -102,6 +105,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   binary_sensor::BinarySensor *online_status_binary_sensor_;
 
   number::Number *output_power_throttle_number_;
+  number::Number *output_power_throttle_broadcast_number_;
   number::Number *battery_current_limit_number_;
   number::Number *battery_voltage_limit_number_;
 
