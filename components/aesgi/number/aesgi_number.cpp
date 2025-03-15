@@ -8,11 +8,17 @@ static const char *const TAG = "aesgi.number";
 
 void AesgiNumber::dump_config() { LOG_NUMBER("", "Aesgi Number", this); }
 void AesgiNumber::control(float value) {
-  char buffer[5];
+  char buffer[7] = {0};
 
   if (this->holding_register_ == 'L') {
     snprintf(buffer, sizeof(buffer), "%03d", (int) value);
-  } else {
+  }
+
+  if (this->holding_register_ == 'B') {
+    snprintf(buffer, sizeof(buffer), "%d %2.1f", (value > 0.0f) ? 2 : 0, value);
+  }
+
+  if (this->holding_register_ == 'S') {
     snprintf(buffer, sizeof(buffer), "%2.1f", value);
   }
 
