@@ -92,10 +92,10 @@ sensor:
       name: "${name} energy today"
     output_power:
       name: "${name} output power"
-    current_limit:
-      name: "${name} current limit"
-    voltage_limit:
-      name: "${name} voltage limit"
+    battery_current_limit:
+      name: "${name} battery current limit"
+    battery_voltage_limit:
+      name: "${name} battery voltage limit"
     uptime:
       name: "${name} uptime"
     ac_voltage_nominal:

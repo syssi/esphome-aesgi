@@ -231,7 +231,7 @@ void Aesgi::on_current_limit_data_(const std::string &data) {
     return;
   }
 
-  this->publish_state_(this->current_limit_sensor_, (float) current_limit);
+  this->publish_state_(this->battery_current_limit_sensor_, (float) current_limit);
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
@@ -254,7 +254,7 @@ void Aesgi::on_operation_mode_data_(const std::string &data) {
   this->publish_state_(this->operation_mode_text_sensor_, operation_mode == 0   ? "MPPT"
                                                           : operation_mode == 2 ? "Battery"
                                                                                 : "Unknown");
-  this->publish_state_(this->voltage_limit_sensor_, voltage_limit);
+  this->publish_state_(this->battery_voltage_limit_sensor_, voltage_limit);
 }
 
 void Aesgi::update() {
@@ -303,8 +303,8 @@ void Aesgi::publish_device_unavailable_() {
   this->publish_state_(this->device_temperature_sensor_, NAN);
   this->publish_state_(this->energy_today_sensor_, NAN);
   this->publish_state_(this->output_power_sensor_, NAN);
-  this->publish_state_(this->current_limit_sensor_, NAN);
-  this->publish_state_(this->voltage_limit_sensor_, NAN);
+  this->publish_state_(this->battery_current_limit_sensor_, NAN);
+  this->publish_state_(this->battery_voltage_limit_sensor_, NAN);
   this->publish_state_(this->uptime_sensor_, NAN);
   this->publish_state_(this->ac_voltage_nominal_sensor_, NAN);
   this->publish_state_(this->ac_frequency_nominal_sensor_, NAN);
@@ -359,8 +359,8 @@ void Aesgi::dump_config() {  // NOLINT(google-readability-function-size,readabil
   LOG_SENSOR("", "Device temperature", this->device_temperature_sensor_);
   LOG_SENSOR("", "Energy today", this->energy_today_sensor_);
   LOG_SENSOR("", "Output power", this->output_power_sensor_);
-  LOG_SENSOR("", "Current limit", this->current_limit_sensor_);
-  LOG_SENSOR("", "Voltage limit", this->voltage_limit_sensor_);
+  LOG_SENSOR("", "Battery current limit", this->battery_current_limit_sensor_);
+  LOG_SENSOR("", "Battery voltage limit", this->battery_voltage_limit_sensor_);
   LOG_SENSOR("", "Uptime", this->uptime_sensor_);
   LOG_SENSOR("", "AC voltage nominal", this->ac_voltage_nominal_sensor_);
   LOG_SENSOR("", "AC frequency nominal", this->ac_frequency_nominal_sensor_);

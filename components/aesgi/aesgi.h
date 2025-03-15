@@ -27,8 +27,12 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   }
   void set_energy_today_sensor(sensor::Sensor *energy_today_sensor) { energy_today_sensor_ = energy_today_sensor; }
   void set_output_power_sensor(sensor::Sensor *output_power_sensor) { output_power_sensor_ = output_power_sensor; }
-  void set_current_limit_sensor(sensor::Sensor *current_limit_sensor) { current_limit_sensor_ = current_limit_sensor; }
-  void set_voltage_limit_sensor(sensor::Sensor *voltage_limit_sensor) { voltage_limit_sensor_ = voltage_limit_sensor; }
+  void set_battery_current_limit_sensor(sensor::Sensor *battery_current_limit_sensor) {
+    battery_current_limit_sensor_ = battery_current_limit_sensor;
+  }
+  void set_battery_voltage_limit_sensor(sensor::Sensor *battery_voltage_limit_sensor) {
+    battery_voltage_limit_sensor_ = battery_voltage_limit_sensor;
+  }
   void set_uptime_sensor(sensor::Sensor *uptime_sensor) { uptime_sensor_ = uptime_sensor; }
   void set_ac_voltage_nominal_sensor(sensor::Sensor *ac_voltage_nominal_sensor) {
     ac_voltage_nominal_sensor_ = ac_voltage_nominal_sensor;
@@ -94,8 +98,8 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   sensor::Sensor *device_temperature_sensor_;
   sensor::Sensor *energy_today_sensor_;
   sensor::Sensor *output_power_sensor_;
-  sensor::Sensor *current_limit_sensor_;
-  sensor::Sensor *voltage_limit_sensor_;
+  sensor::Sensor *battery_current_limit_sensor_;
+  sensor::Sensor *battery_voltage_limit_sensor_;
   sensor::Sensor *uptime_sensor_;
   sensor::Sensor *ac_voltage_nominal_sensor_;
   sensor::Sensor *ac_frequency_nominal_sensor_;
