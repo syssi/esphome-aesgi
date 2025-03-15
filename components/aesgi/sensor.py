@@ -42,9 +42,9 @@ CONF_AC_CURRENT = "ac_current"
 CONF_AC_POWER = "ac_power"
 CONF_DEVICE_TEMPERATURE = "device_temperature"
 CONF_ENERGY_TODAY = "energy_today"
-CONF_OUTPUT_POWER = "output_power"
-CONF_CURRENT_LIMIT = "current_limit"
-CONF_VOLTAGE_LIMIT = "voltage_limit"
+CONF_OUTPUT_POWER_THROTTLE = "output_power_throttle"
+CONF_BATTERY_CURRENT_LIMIT = "battery_current_limit"
+CONF_BATTERY_VOLTAGE_LIMIT = "battery_voltage_limit"
 CONF_UPTIME = "uptime"
 CONF_AC_VOLTAGE_NOMINAL = "ac_voltage_nominal"
 CONF_AC_FREQUENCY_NOMINAL = "ac_frequency_nominal"
@@ -81,9 +81,9 @@ SENSORS = [
     CONF_AC_POWER,
     CONF_DEVICE_TEMPERATURE,
     CONF_ENERGY_TODAY,
-    CONF_OUTPUT_POWER,
-    CONF_CURRENT_LIMIT,
-    CONF_VOLTAGE_LIMIT,
+    CONF_OUTPUT_POWER_THROTTLE,
+    CONF_BATTERY_CURRENT_LIMIT,
+    CONF_BATTERY_VOLTAGE_LIMIT,
     CONF_UPTIME,
     CONF_AC_VOLTAGE_NOMINAL,
     CONF_AC_FREQUENCY_NOMINAL,
@@ -178,21 +178,21 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
             state_class=STATE_CLASS_TOTAL_INCREASING,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Optional(CONF_OUTPUT_POWER): sensor.sensor_schema(
+        cv.Optional(CONF_OUTPUT_POWER_THROTTLE): sensor.sensor_schema(
             unit_of_measurement=UNIT_PERCENT,
             icon="mdi:solar-power",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional(CONF_CURRENT_LIMIT): sensor.sensor_schema(
+        cv.Optional(CONF_BATTERY_CURRENT_LIMIT): sensor.sensor_schema(
             unit_of_measurement=UNIT_AMPERE,
             icon="mdi:current-dc",
             accuracy_decimals=1,
             device_class=DEVICE_CLASS_CURRENT,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional(CONF_VOLTAGE_LIMIT): sensor.sensor_schema(
+        cv.Optional(CONF_BATTERY_VOLTAGE_LIMIT): sensor.sensor_schema(
             unit_of_measurement=UNIT_VOLT,
             accuracy_decimals=1,
             device_class=DEVICE_CLASS_VOLTAGE,

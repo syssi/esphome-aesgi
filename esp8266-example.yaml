@@ -88,12 +88,12 @@ sensor:
       name: "${name} device temperature"
     energy_today:
       name: "${name} energy today"
-    output_power:
-      name: "${name} output power"
-    current_limit:
-      name: "${name} current limit"
-    voltage_limit:
-      name: "${name} voltage limit"
+    output_power_throttle:
+      name: "${name} output power throttle"
+    battery_current_limit:
+      name: "${name} battery current limit"
+    battery_voltage_limit:
+      name: "${name} battery voltage limit"
     uptime:
       name: "${name} uptime"
     ac_voltage_nominal:

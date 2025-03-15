@@ -26,9 +26,15 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
     device_temperature_sensor_ = device_temperature_sensor;
   }
   void set_energy_today_sensor(sensor::Sensor *energy_today_sensor) { energy_today_sensor_ = energy_today_sensor; }
-  void set_output_power_sensor(sensor::Sensor *output_power_sensor) { output_power_sensor_ = output_power_sensor; }
-  void set_current_limit_sensor(sensor::Sensor *current_limit_sensor) { current_limit_sensor_ = current_limit_sensor; }
-  void set_voltage_limit_sensor(sensor::Sensor *voltage_limit_sensor) { voltage_limit_sensor_ = voltage_limit_sensor; }
+  void set_output_power_throttle_sensor(sensor::Sensor *output_power_throttle_sensor) {
+    output_power_throttle_sensor_ = output_power_throttle_sensor;
+  }
+  void set_battery_current_limit_sensor(sensor::Sensor *battery_current_limit_sensor) {
+    battery_current_limit_sensor_ = battery_current_limit_sensor;
+  }
+  void set_battery_voltage_limit_sensor(sensor::Sensor *battery_voltage_limit_sensor) {
+    battery_voltage_limit_sensor_ = battery_voltage_limit_sensor;
+  }
   void set_uptime_sensor(sensor::Sensor *uptime_sensor) { uptime_sensor_ = uptime_sensor; }
   void set_ac_voltage_nominal_sensor(sensor::Sensor *ac_voltage_nominal_sensor) {
     ac_voltage_nominal_sensor_ = ac_voltage_nominal_sensor;
@@ -93,9 +99,9 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   sensor::Sensor *ac_power_sensor_;
   sensor::Sensor *device_temperature_sensor_;
   sensor::Sensor *energy_today_sensor_;
-  sensor::Sensor *output_power_sensor_;
-  sensor::Sensor *current_limit_sensor_;
-  sensor::Sensor *voltage_limit_sensor_;
+  sensor::Sensor *output_power_throttle_sensor_;
+  sensor::Sensor *battery_current_limit_sensor_;
+  sensor::Sensor *battery_voltage_limit_sensor_;
   sensor::Sensor *uptime_sensor_;
   sensor::Sensor *ac_voltage_nominal_sensor_;
   sensor::Sensor *ac_frequency_nominal_sensor_;
@@ -122,10 +128,10 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
 
   void on_status_data_(const std::string &data);
   void on_device_type_data_(const std::string &data);
-  void on_output_power_data_(const std::string &data);
+  void on_output_power_throttle_data_(const std::string &data);
   void on_grid_disconnect_parameters_data_(const std::string &data);
   void on_error_history_data_(const std::string &data);
-  void on_current_limit_data_(const std::string &data);
+  void on_battery_current_limit_data_(const std::string &data);
   void on_operation_mode_data_(const std::string &data);
 
   void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);

@@ -11,18 +11,21 @@ static const uint8_t MAX_NO_RESPONSE_COUNT = 5;
 
 static const uint8_t AESGI_COMMAND_STATUS = '0';
 static const uint8_t AESGI_COMMAND_DEVICE_TYPE = '9';
-static const uint8_t AESGI_COMMAND_OUTPUT_POWER = 'L';
+static const uint8_t AESGI_COMMAND_OUTPUT_POWER_THROTTLE = 'L';
 static const uint8_t AESGI_COMMAND_AUTO_TEST = 'A';
 static const uint8_t AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS = 'P';
 static const uint8_t AESGI_COMMAND_ERROR_HISTORY = 'F';
-static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
+static const uint8_t AESGI_COMMAND_BATTERY_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
 
 static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 7;
 static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
-    AESGI_COMMAND_STATUS,         AESGI_COMMAND_DEVICE_TYPE,
-    AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS,
-    AESGI_COMMAND_ERROR_HISTORY,  AESGI_COMMAND_CURRENT_LIMIT,
+    AESGI_COMMAND_STATUS,
+    AESGI_COMMAND_DEVICE_TYPE,
+    AESGI_COMMAND_OUTPUT_POWER_THROTTLE,
+    AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS,
+    AESGI_COMMAND_ERROR_HISTORY,
+    AESGI_COMMAND_BATTERY_CURRENT_LIMIT,
     AESGI_COMMAND_OPERATION_MODE,
 };
 
@@ -37,8 +40,8 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     case AESGI_COMMAND_DEVICE_TYPE:
       this->on_device_type_data_(data);
       break;
-    case AESGI_COMMAND_OUTPUT_POWER:
-      this->on_output_power_data_(data);
+    case AESGI_COMMAND_OUTPUT_POWER_THROTTLE:
+      this->on_output_power_throttle_data_(data);
       break;
     case AESGI_COMMAND_AUTO_TEST:
       ESP_LOGI(TAG, "Auto test response (%zu bytes) received: %s", data.size(), data.c_str());
@@ -49,8 +52,8 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     case AESGI_COMMAND_ERROR_HISTORY:
       this->on_error_history_data_(data);
       break;
-    case AESGI_COMMAND_CURRENT_LIMIT:
-      this->on_current_limit_data_(data);
+    case AESGI_COMMAND_BATTERY_CURRENT_LIMIT:
+      this->on_battery_current_limit_data_(data);
       break;
     case AESGI_COMMAND_OPERATION_MODE:
       this->on_operation_mode_data_(data);
@@ -125,23 +128,23 @@ void Aesgi::on_device_type_data_(const std::string &data) {
   this->publish_state_(this->device_type_text_sensor_, device_type);
 }
 
-void Aesgi::on_output_power_data_(const std::string &data) {
+void Aesgi::on_output_power_throttle_data_(const std::string &data) {
   if (data.size() < 11) {
-    ESP_LOGW(TAG, "Output power frame too short. Skipping");
+    ESP_LOGW(TAG, "Output power throttle frame too short. Skipping");
     return;
   }
 
-  ESP_LOGI(TAG, "Output power frame received (%zu bytes)", data.size());
+  ESP_LOGI(TAG, "Output power throttle frame received (%zu bytes)", data.size());
 
   int output_power;
 
   // *29L 100 \xB2\r
   if (sscanf(data.c_str(), "*%*s %d", &output_power) != 1) {  // NOLINT
-    ESP_LOGE(TAG, "Parsing output power response failed: %s", data.c_str());
+    ESP_LOGE(TAG, "Parsing output power throttle response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->output_power_sensor_, (float) output_power);
+  this->publish_state_(this->output_power_throttle_sensor_, (float) output_power);
 }
 
 void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
@@ -215,23 +218,23 @@ void Aesgi::on_error_history_data_(const std::string &data) {
   }
 }
 
-void Aesgi::on_current_limit_data_(const std::string &data) {
+void Aesgi::on_battery_current_limit_data_(const std::string &data) {
   if (data.size() < 12) {
-    ESP_LOGW(TAG, "Current limit frame too short. Skipping");
+    ESP_LOGW(TAG, "Battery current limit frame too short. Skipping");
     return;
   }
 
-  ESP_LOGI(TAG, "Current limit frame received (%zu bytes)", data.size());
+  ESP_LOGI(TAG, "Battery current limit frame received (%zu bytes)", data.size());
 
   int current_limit;
 
   // *29S 11.5 \xED\r
   if (sscanf(data.c_str(), "*%*s %d", &current_limit) != 1) {  // NOLINT
-    ESP_LOGE(TAG, "Parsing current limit response failed: %s", data.c_str());
+    ESP_LOGE(TAG, "Parsing battery current limit response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->current_limit_sensor_, (float) current_limit);
+  this->publish_state_(this->battery_current_limit_sensor_, (float) current_limit);
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
@@ -254,7 +257,7 @@ void Aesgi::on_operation_mode_data_(const std::string &data) {
   this->publish_state_(this->operation_mode_text_sensor_, operation_mode == 0   ? "MPPT"
                                                           : operation_mode == 2 ? "Battery"
                                                                                 : "Unknown");
-  this->publish_state_(this->voltage_limit_sensor_, voltage_limit);
+  this->publish_state_(this->battery_voltage_limit_sensor_, voltage_limit);
 }
 
 void Aesgi::update() {
@@ -302,9 +305,9 @@ void Aesgi::publish_device_unavailable_() {
   this->publish_state_(this->ac_power_sensor_, NAN);
   this->publish_state_(this->device_temperature_sensor_, NAN);
   this->publish_state_(this->energy_today_sensor_, NAN);
-  this->publish_state_(this->output_power_sensor_, NAN);
-  this->publish_state_(this->current_limit_sensor_, NAN);
-  this->publish_state_(this->voltage_limit_sensor_, NAN);
+  this->publish_state_(this->output_power_throttle_sensor_, NAN);
+  this->publish_state_(this->battery_current_limit_sensor_, NAN);
+  this->publish_state_(this->battery_voltage_limit_sensor_, NAN);
   this->publish_state_(this->uptime_sensor_, NAN);
   this->publish_state_(this->ac_voltage_nominal_sensor_, NAN);
   this->publish_state_(this->ac_frequency_nominal_sensor_, NAN);
@@ -358,9 +361,9 @@ void Aesgi::dump_config() {  // NOLINT(google-readability-function-size,readabil
   LOG_SENSOR("", "AC power", this->ac_power_sensor_);
   LOG_SENSOR("", "Device temperature", this->device_temperature_sensor_);
   LOG_SENSOR("", "Energy today", this->energy_today_sensor_);
-  LOG_SENSOR("", "Output power", this->output_power_sensor_);
-  LOG_SENSOR("", "Current limit", this->current_limit_sensor_);
-  LOG_SENSOR("", "Voltage limit", this->voltage_limit_sensor_);
+  LOG_SENSOR("", "Output power", this->output_power_throttle_sensor_);
+  LOG_SENSOR("", "Battery current limit", this->battery_current_limit_sensor_);
+  LOG_SENSOR("", "Battery voltage limit", this->battery_voltage_limit_sensor_);
   LOG_SENSOR("", "Uptime", this->uptime_sensor_);
   LOG_SENSOR("", "AC voltage nominal", this->ac_voltage_nominal_sensor_);
   LOG_SENSOR("", "AC frequency nominal", this->ac_frequency_nominal_sensor_);
