@@ -26,7 +26,9 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
     device_temperature_sensor_ = device_temperature_sensor;
   }
   void set_energy_today_sensor(sensor::Sensor *energy_today_sensor) { energy_today_sensor_ = energy_today_sensor; }
-  void set_output_power_sensor(sensor::Sensor *output_power_sensor) { output_power_sensor_ = output_power_sensor; }
+  void set_output_power_throttle_sensor(sensor::Sensor *output_power_throttle_sensor) {
+    output_power_throttle_sensor_ = output_power_throttle_sensor;
+  }
   void set_battery_current_limit_sensor(sensor::Sensor *battery_current_limit_sensor) {
     battery_current_limit_sensor_ = battery_current_limit_sensor;
   }
@@ -97,7 +99,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   sensor::Sensor *ac_power_sensor_;
   sensor::Sensor *device_temperature_sensor_;
   sensor::Sensor *energy_today_sensor_;
-  sensor::Sensor *output_power_sensor_;
+  sensor::Sensor *output_power_throttle_sensor_;
   sensor::Sensor *battery_current_limit_sensor_;
   sensor::Sensor *battery_voltage_limit_sensor_;
   sensor::Sensor *uptime_sensor_;
@@ -126,7 +128,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
 
   void on_status_data_(const std::string &data);
   void on_device_type_data_(const std::string &data);
-  void on_output_power_data_(const std::string &data);
+  void on_output_power_throttle_data_(const std::string &data);
   void on_grid_disconnect_parameters_data_(const std::string &data);
   void on_error_history_data_(const std::string &data);
   void on_battery_current_limit_data_(const std::string &data);

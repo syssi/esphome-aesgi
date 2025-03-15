@@ -42,7 +42,7 @@ CONF_AC_CURRENT = "ac_current"
 CONF_AC_POWER = "ac_power"
 CONF_DEVICE_TEMPERATURE = "device_temperature"
 CONF_ENERGY_TODAY = "energy_today"
-CONF_OUTPUT_POWER = "output_power"
+CONF_OUTPUT_POWER_THROTTLE = "output_power_throttle"
 CONF_BATTERY_CURRENT_LIMIT = "battery_current_limit"
 CONF_BATTERY_VOLTAGE_LIMIT = "battery_voltage_limit"
 CONF_UPTIME = "uptime"
@@ -81,7 +81,7 @@ SENSORS = [
     CONF_AC_POWER,
     CONF_DEVICE_TEMPERATURE,
     CONF_ENERGY_TODAY,
-    CONF_OUTPUT_POWER,
+    CONF_OUTPUT_POWER_THROTTLE,
     CONF_BATTERY_CURRENT_LIMIT,
     CONF_BATTERY_VOLTAGE_LIMIT,
     CONF_UPTIME,
@@ -178,7 +178,7 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
             state_class=STATE_CLASS_TOTAL_INCREASING,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Optional(CONF_OUTPUT_POWER): sensor.sensor_schema(
+        cv.Optional(CONF_OUTPUT_POWER_THROTTLE): sensor.sensor_schema(
             unit_of_measurement=UNIT_PERCENT,
             icon="mdi:solar-power",
             accuracy_decimals=0,
