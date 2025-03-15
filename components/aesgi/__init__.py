@@ -3,7 +3,14 @@ from esphome.components import aesgi_rs485
 import esphome.config_validation as cv
 from esphome.const import CONF_ID
 
-AUTO_LOAD = ["aesgi_rs485", "binary_sensor", "number", "sensor", "text_sensor"]
+AUTO_LOAD = [
+    "aesgi_rs485",
+    "binary_sensor",
+    "button",
+    "number",
+    "sensor",
+    "text_sensor",
+]
 CODEOWNERS = ["@syssi"]
 MULTI_CONF = True
 
