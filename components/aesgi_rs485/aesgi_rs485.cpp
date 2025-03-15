@@ -104,20 +104,30 @@ float AesgiRs485::get_setup_priority() const {
   return setup_priority::BUS - 1.0f;
 }
 
-void AesgiRs485::send(uint8_t address, uint8_t command) {
+void AesgiRs485::send(uint8_t address, uint8_t command, const std::string &value) {
   if (address < 1 || address > 32) {
     ESP_LOGW(TAG, "Invalid device address: %d", address);
     return;
   }
 
-  uint8_t frame[5];
+  size_t frame_len = 1 + 2 + 1 + (value.empty() ? 0 : 1 + value.size()) + 1;
+  std::vector<uint8_t> frame(frame_len);
+
   frame[0] = '#';
   frame[1] = '0' + (address / 10);
   frame[2] = '0' + (address % 10);
   frame[3] = command;
-  frame[4] = '\r';
 
-  this->write_array(frame, 5);
+  if (!value.empty()) {
+    frame[4] = ' ';
+    for (size_t i = 0; i < value.size(); i++) {
+      frame[5 + i] = value[i];
+    }
+  }
+
+  frame[frame_len - 1] = '\r';
+
+  this->write_array(frame.data(), frame_len);
   this->flush();
 }
 

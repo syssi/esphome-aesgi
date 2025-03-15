@@ -2,6 +2,7 @@
 
 #include "esphome/core/component.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
+#include "esphome/components/number/number.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
 #include "esphome/components/aesgi_rs485/aesgi_rs485.h"
@@ -13,6 +14,16 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
  public:
   void set_online_status_binary_sensor(binary_sensor::BinarySensor *online_status_binary_sensor) {
     online_status_binary_sensor_ = online_status_binary_sensor;
+  }
+
+  void set_output_power_throttle_number(number::Number *output_power_throttle_number) {
+    output_power_throttle_number_ = output_power_throttle_number;
+  }
+  void set_battery_current_limit_number(number::Number *battery_current_limit_number) {
+    battery_current_limit_number_ = battery_current_limit_number;
+  }
+  void set_battery_voltage_limit_number(number::Number *battery_voltage_limit_number) {
+    battery_voltage_limit_number_ = battery_voltage_limit_number;
   }
 
   void set_status_sensor(sensor::Sensor *status_sensor) { status_sensor_ = status_sensor; }
@@ -89,6 +100,10 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
 
  protected:
   binary_sensor::BinarySensor *online_status_binary_sensor_;
+
+  number::Number *output_power_throttle_number_;
+  number::Number *battery_current_limit_number_;
+  number::Number *battery_voltage_limit_number_;
 
   sensor::Sensor *status_sensor_;
   sensor::Sensor *dc_voltage_sensor_;
