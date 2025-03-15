@@ -55,25 +55,49 @@ esphome run esp32-ble-example.yaml
 ## Example response all sensors enabled
 
 ```
-[aesgi:073]: Status frame received (58 bytes)
+[binary_sensor:036]: 'aesgi online status': Sending state ON
+[aesgi:075]: Status frame received (58 bytes)
 [sensor:093]: 'aesgi status': Sending state 0.00000  with 0 decimals of accuracy
-[sensor:093]: 'aesgi dc voltage': Sending state 20.00000 V with 1 decimals of accuracy
-[sensor:093]: 'aesgi dc current': Sending state 0.00000 A with 2 decimals of accuracy
-[sensor:093]: 'aesgi dc power': Sending state 0.00000 W with 0 decimals of accuracy
-[sensor:093]: 'aesgi ac voltage': Sending state 235.10001 V with 1 decimals of accuracy
-[sensor:093]: 'aesgi ac current': Sending state 0.01000 A with 2 decimals of accuracy
-[sensor:093]: 'aesgi ac power': Sending state 1.00000 W with 0 decimals of accuracy
+[text_sensor:064]: 'aesgi errors': Sending state ''
+[sensor:093]: 'aesgi DC voltage': Sending state 20.00000 V with 1 decimals of accuracy
+[sensor:093]: 'aesgi DC current': Sending state 0.00000 A with 2 decimals of accuracy
+[sensor:093]: 'aesgi DC power': Sending state 0.00000 W with 0 decimals of accuracy
+[sensor:093]: 'aesgi AC voltage': Sending state 235.10001 V with 1 decimals of accuracy
+[sensor:093]: 'aesgi AC current': Sending state 0.01000 A with 2 decimals of accuracy
+[sensor:093]: 'aesgi AC power': Sending state 1.00000 W with 0 decimals of accuracy
 [sensor:093]: 'aesgi device temperature': Sending state 50.00000 °C with 0 decimals of accuracy
 [sensor:093]: 'aesgi energy today': Sending state 44.00000 Wh with 0 decimals of accuracy
-[aesgi:111]: Device type frame received (14 bytes)
+[aesgi:115]: Device type frame received (14 bytes)
 [text_sensor:064]: 'aesgi device type': Sending state 'PV350W'
-[aesgi:130]: Output power frame received (11 bytes)
+[aesgi:134]: Output power frame received (11 bytes)
 [sensor:093]: 'aesgi output power': Sending state 100.00000 % with 0 decimals of accuracy
-[aesgi:149]: Settings frame received (62 bytes)
-[aesgi:160]: Errors frame received (73 bytes)
-[aesgi:171]: Current limit frame received (12 bytes)
+[aesgi:153]: Grid disconnect parameters frame received (62 bytes)
+[sensor:093]: 'aesgi AC voltage nominal': Sending state 230.00000 V with 1 decimals of accuracy
+[sensor:093]: 'aesgi AC frequency nominal': Sending state 50.00000 Hz with 1 decimals of accuracy
+[sensor:093]: 'aesgi AC voltage upper limit': Sending state 264.50000 V with 1 decimals of accuracy
+[sensor:093]: 'aesgi AC voltage upper limit delay': Sending state 140.00000 ms with 0 decimals of accuracy
+[sensor:093]: 'aesgi AC voltage lower limit': Sending state 184.00000 V with 1 decimals of accuracy
+[sensor:093]: 'aesgi AC voltage lower limit delay': Sending state 140.00000 ms with 0 decimals of accuracy
+[sensor:093]: 'aesgi AC frequency upper limit': Sending state 47.50087 Hz with 2 decimals of accuracy
+[sensor:093]: 'aesgi AC frequency upper limit delay': Sending state 160.00000 ms with 0 decimals of accuracy
+[sensor:093]: 'aesgi AC frequency lower limit': Sending state 51.48016 Hz with 2 decimals of accuracy
+[aesgi:195]: Error history frame received (73 bytes)
+[sensor:093]: 'aesgi uptime': Sending state 7625.00000 s with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot1 error code': Sending state 7.00000  with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot1 error time': Sending state 0.00000 s with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot2 error code': Sending state 6.00000  with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot2 error time': Sending state 0.00000 s with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot3 error code': Sending state 7.00000  with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot3 error time': Sending state 1.00000 s with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot4 error code': Sending state 25.00000  with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot4 error time': Sending state 1.00000 s with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot5 error code': Sending state 25.00000  with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot5 error time': Sending state 2.00000 s with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot6 error code': Sending state 25.00000  with 0 decimals of accuracy
+[sensor:093]: 'aesgi error history slot6 error time': Sending state 3.00000 s with 0 decimals of accuracy
+[aesgi:224]: Current limit frame received (12 bytes)
 [sensor:093]: 'aesgi current limit': Sending state 11.00000 A with 1 decimals of accuracy
-[aesgi:190]: Operation mode frame received (14 bytes)
+[aesgi:243]: Operation mode frame received (14 bytes)
 [text_sensor:064]: 'aesgi operation mode': Sending state 'MPPT'
 [sensor:093]: 'aesgi voltage limit': Sending state 20.00000 V with 1 decimals of accuracy
 ```
