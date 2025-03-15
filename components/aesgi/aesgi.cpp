@@ -145,6 +145,7 @@ void Aesgi::on_output_power_throttle_data_(const std::string &data) {
   }
 
   this->publish_state_(this->output_power_throttle_sensor_, (float) output_power);
+  this->publish_state_(this->output_power_throttle_number_, (float) output_power);
 }
 
 void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
@@ -235,6 +236,7 @@ void Aesgi::on_battery_current_limit_data_(const std::string &data) {
   }
 
   this->publish_state_(this->battery_current_limit_sensor_, (float) current_limit);
+  this->publish_state_(this->battery_current_limit_number_, (float) current_limit);
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
@@ -258,6 +260,7 @@ void Aesgi::on_operation_mode_data_(const std::string &data) {
                                                           : operation_mode == 2 ? "Battery"
                                                                                 : "Unknown");
   this->publish_state_(this->battery_voltage_limit_sensor_, voltage_limit);
+  this->publish_state_(this->battery_voltage_limit_number_, voltage_limit);
 }
 
 void Aesgi::update() {
@@ -331,6 +334,13 @@ void Aesgi::publish_state_(binary_sensor::BinarySensor *binary_sensor, const boo
     return;
 
   binary_sensor->publish_state(state);
+}
+
+void Aesgi::publish_state_(number::Number *number, float value) {
+  if (number == nullptr)
+    return;
+
+  number->publish_state(value);
 }
 
 void Aesgi::publish_state_(sensor::Sensor *sensor, float value) {

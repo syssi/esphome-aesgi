@@ -69,6 +69,16 @@ binary_sensor:
     online_status:
       name: "${name} online status"
 
+number:
+  - platform: aesgi
+    aesgi_id: inverter0
+    output_power_throttle:
+      name: "${name} output power throttle"
+    battery_current_limit:
+      name: "${name} battery current limit"
+    battery_voltage_limit:
+      name: "${name} battery voltage limit"
+
 sensor:
   - platform: aesgi
     aesgi_id: inverter0

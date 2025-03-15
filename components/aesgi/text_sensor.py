@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import text_sensor
 import esphome.config_validation as cv
-from esphome.const import CONF_ICON, CONF_ID, ICON_EMPTY
+from esphome.const import CONF_ICON, CONF_ID
 
 from . import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID
 
