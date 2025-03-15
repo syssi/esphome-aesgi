@@ -164,14 +164,9 @@ void Aesgi::on_error_history_data_(const std::string &data) {
   int error_times[6];
 
   // *29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r
-  const char* format = "*%*s %d %d %d %d %d %d %d %d %d %d %d %d %d";
-  int ret = sscanf(data.c_str(), format, &uptime,
-                   &error_codes[0], &error_times[0],
-                   &error_codes[1], &error_times[1],
-                   &error_codes[2], &error_times[2],
-                   &error_codes[3], &error_times[3],
-                   &error_codes[4], &error_times[4],
-                   &error_codes[5], &error_times[5]);
+  int ret = sscanf(data.c_str(), "*%*s %d %d %d %d %d %d %d %d %d %d %d %d %d", &uptime, &error_codes[0],  // NOLINT
+                   &error_times[0], &error_codes[1], &error_times[1], &error_codes[2], &error_times[2], &error_codes[3],
+                   &error_times[3], &error_codes[4], &error_times[4], &error_codes[5], &error_times[5]);
 
   if (ret != 13) {
     ESP_LOGE(TAG, "Parsing error history response failed: %s", data.c_str());
