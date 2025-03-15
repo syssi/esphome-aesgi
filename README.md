@@ -56,7 +56,7 @@ esphome run esp32-ble-example.yaml
 
 ```
 [binary_sensor:036]: 'aesgi online status': Sending state ON
-[aesgi:075]: Status frame received (58 bytes)
+[aesgi:078]: Status frame received (58 bytes)
 [sensor:093]: 'aesgi status': Sending state 0.00000  with 0 decimals of accuracy
 [text_sensor:064]: 'aesgi errors': Sending state ''
 [sensor:093]: 'aesgi DC voltage': Sending state 20.00000 V with 1 decimals of accuracy
@@ -67,11 +67,12 @@ esphome run esp32-ble-example.yaml
 [sensor:093]: 'aesgi AC power': Sending state 1.00000 W with 0 decimals of accuracy
 [sensor:093]: 'aesgi device temperature': Sending state 50.00000 °C with 0 decimals of accuracy
 [sensor:093]: 'aesgi energy today': Sending state 44.00000 Wh with 0 decimals of accuracy
-[aesgi:115]: Device type frame received (14 bytes)
+[aesgi:118]: Device type frame received (14 bytes)
 [text_sensor:064]: 'aesgi device type': Sending state 'PV350W'
-[aesgi:134]: Output power frame received (11 bytes)
-[sensor:093]: 'aesgi output power': Sending state 100.00000 % with 0 decimals of accuracy
-[aesgi:153]: Grid disconnect parameters frame received (62 bytes)
+[aesgi:137]: Output power throttle frame received (11 bytes)
+[sensor:093]: 'aesgi output power throttle': Sending state 100.00000 % with 0 decimals of accuracy
+[number:012]: 'aesgi output power throttle': Sending state 100.000000
+[aesgi:158]: Grid disconnect parameters frame received (62 bytes)
 [sensor:093]: 'aesgi AC voltage nominal': Sending state 230.00000 V with 1 decimals of accuracy
 [sensor:093]: 'aesgi AC frequency nominal': Sending state 50.00000 Hz with 1 decimals of accuracy
 [sensor:093]: 'aesgi AC voltage upper limit': Sending state 264.50000 V with 1 decimals of accuracy
@@ -81,7 +82,7 @@ esphome run esp32-ble-example.yaml
 [sensor:093]: 'aesgi AC frequency upper limit': Sending state 47.50087 Hz with 2 decimals of accuracy
 [sensor:093]: 'aesgi AC frequency upper limit delay': Sending state 160.00000 ms with 0 decimals of accuracy
 [sensor:093]: 'aesgi AC frequency lower limit': Sending state 51.48016 Hz with 2 decimals of accuracy
-[aesgi:195]: Error history frame received (73 bytes)
+[aesgi:200]: Error history frame received (73 bytes)
 [sensor:093]: 'aesgi uptime': Sending state 7625.00000 s with 0 decimals of accuracy
 [sensor:093]: 'aesgi error history slot1 error code': Sending state 7.00000  with 0 decimals of accuracy
 [sensor:093]: 'aesgi error history slot1 error time': Sending state 0.00000 s with 0 decimals of accuracy
@@ -95,11 +96,13 @@ esphome run esp32-ble-example.yaml
 [sensor:093]: 'aesgi error history slot5 error time': Sending state 2.00000 s with 0 decimals of accuracy
 [sensor:093]: 'aesgi error history slot6 error code': Sending state 25.00000  with 0 decimals of accuracy
 [sensor:093]: 'aesgi error history slot6 error time': Sending state 3.00000 s with 0 decimals of accuracy
-[aesgi:224]: Current limit frame received (12 bytes)
-[sensor:093]: 'aesgi current limit': Sending state 11.00000 A with 1 decimals of accuracy
-[aesgi:243]: Operation mode frame received (14 bytes)
+[aesgi:229]: Battery current limit frame received (12 bytes)
+[sensor:093]: 'aesgi battery current limit': Sending state 11.00000 A with 1 decimals of accuracy
+[number:012]: 'aesgi battery current limit': Sending state 11.000000
+[aesgi:249]: Operation mode frame received (14 bytes)
 [text_sensor:064]: 'aesgi operation mode': Sending state 'MPPT'
-[sensor:093]: 'aesgi voltage limit': Sending state 20.00000 V with 1 decimals of accuracy
+[sensor:093]: 'aesgi battery voltage limit': Sending state 20.00000 V with 1 decimals of accuracy
+[number:012]: 'aesgi battery voltage limit': Sending state 20.000000
 ```
 
 ## Protocol
