@@ -13,15 +13,17 @@ static const uint8_t AESGI_COMMAND_STATUS = '0';
 static const uint8_t AESGI_COMMAND_DEVICE_TYPE = '9';
 static const uint8_t AESGI_COMMAND_OUTPUT_POWER = 'L';
 static const uint8_t AESGI_COMMAND_AUTO_TEST = 'A';
-static const uint8_t AESGI_COMMAND_SETTINGS = 'P';
+static const uint8_t AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS = 'P';
 static const uint8_t AESGI_COMMAND_ERROR_HISTORY = 'F';
 static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
 
 static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 7;
 static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
-    AESGI_COMMAND_STATUS,        AESGI_COMMAND_DEVICE_TYPE,   AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_SETTINGS,
-    AESGI_COMMAND_ERROR_HISTORY, AESGI_COMMAND_CURRENT_LIMIT, AESGI_COMMAND_OPERATION_MODE,
+    AESGI_COMMAND_STATUS,         AESGI_COMMAND_DEVICE_TYPE,
+    AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS,
+    AESGI_COMMAND_ERROR_HISTORY,  AESGI_COMMAND_CURRENT_LIMIT,
+    AESGI_COMMAND_OPERATION_MODE,
 };
 
 void Aesgi::on_aesgi_rs485_data(const std::string &data) {
@@ -41,8 +43,8 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     case AESGI_COMMAND_AUTO_TEST:
       ESP_LOGI(TAG, "Auto test response (%zu bytes) received: %s", data.size(), data.c_str());
       break;
-    case AESGI_COMMAND_SETTINGS:
-      this->on_settings_data_(data);
+    case AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS:
+      this->on_grid_disconnect_parameters_data_(data);
       break;
     case AESGI_COMMAND_ERROR_HISTORY:
       this->on_error_history_data_(data);
@@ -140,15 +142,46 @@ void Aesgi::on_output_power_data_(const std::string &data) {
   this->publish_state_(this->output_power_sensor_, (float) output_power);
 }
 
-void Aesgi::on_settings_data_(const std::string &data) {
+void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
   if (data.size() < 62) {
-    ESP_LOGW(TAG, "Settings frame too short. Skipping");
+    ESP_LOGW(TAG, "Grid disconnect parameters frame too short. Skipping");
     return;
   }
 
-  ESP_LOGI(TAG, "Settings frame received (%zu bytes)", data.size());
+  ESP_LOGI(TAG, "Grid disconnect parameters frame received (%zu bytes)", data.size());
+
+  float ac_voltage_nominal;
+  float ac_frequency_nominal;
+  float ac_voltage_upper_limit;
+  float ac_voltage_upper_limit_delay;
+  float ac_voltage_lower_limit;
+  float ac_voltage_lower_limit_delay;
+  int ac_frequency_upper_limit;
+  int ac_frequency_upper_limit_delay;
+  int ac_frequency_lower_limit;
+  int ac_frequency_lower_limit_delay;
 
   // *29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r
+  int ret = sscanf(data.c_str(), "*%*s %f %f %f %f %f %f %d %d %d %d", &ac_voltage_nominal,  // NOLINT
+                   &ac_frequency_nominal, &ac_voltage_upper_limit, &ac_voltage_upper_limit_delay,
+                   &ac_voltage_lower_limit, &ac_voltage_lower_limit_delay, &ac_frequency_upper_limit,
+                   &ac_frequency_upper_limit_delay, &ac_frequency_lower_limit, &ac_frequency_lower_limit_delay);
+
+  if (ret != 10) {
+    ESP_LOGE(TAG, "Parsing grid disconnect parameters response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->ac_voltage_nominal_sensor_, ac_voltage_nominal);
+  this->publish_state_(this->ac_frequency_nominal_sensor_, ac_frequency_nominal);
+  this->publish_state_(this->ac_voltage_upper_limit_sensor_, ac_voltage_upper_limit);
+  this->publish_state_(this->ac_voltage_upper_limit_delay_sensor_, ac_voltage_upper_limit_delay);
+  this->publish_state_(this->ac_voltage_lower_limit_sensor_, ac_voltage_lower_limit);
+  this->publish_state_(this->ac_voltage_lower_limit_delay_sensor_, ac_voltage_lower_limit_delay);
+  this->publish_state_(this->ac_frequency_upper_limit_sensor_, count_to_hertz_(ac_frequency_upper_limit));
+  this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, ac_frequency_upper_limit_delay);
+  this->publish_state_(this->ac_frequency_lower_limit_sensor_, count_to_hertz_(ac_frequency_lower_limit));
+  this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, ac_frequency_lower_limit_delay);
 }
 
 void Aesgi::on_error_history_data_(const std::string &data) {
@@ -304,6 +337,18 @@ void Aesgi::dump_config() {  // NOLINT(google-readability-function-size,readabil
   LOG_SENSOR("", "Energy today", this->energy_today_sensor_);
   LOG_SENSOR("", "Output power", this->output_power_sensor_);
   LOG_SENSOR("", "Current limit", this->current_limit_sensor_);
+  LOG_SENSOR("", "Voltage limit", this->voltage_limit_sensor_);
+  LOG_SENSOR("", "Uptime", this->uptime_sensor_);
+  LOG_SENSOR("", "AC voltage nominal", this->ac_voltage_nominal_sensor_);
+  LOG_SENSOR("", "AC frequency nominal", this->ac_frequency_nominal_sensor_);
+  LOG_SENSOR("", "AC voltage upper limit", this->ac_voltage_upper_limit_sensor_);
+  LOG_SENSOR("", "AC voltage upper limit delay", this->ac_voltage_upper_limit_delay_sensor_);
+  LOG_SENSOR("", "AC voltage lower limit", this->ac_voltage_lower_limit_sensor_);
+  LOG_SENSOR("", "AC voltage lower limit delay", this->ac_voltage_lower_limit_delay_sensor_);
+  LOG_SENSOR("", "AC frequency upper limit", this->ac_frequency_upper_limit_sensor_);
+  LOG_SENSOR("", "AC frequency upper limit delay", this->ac_frequency_upper_limit_delay_sensor_);
+  LOG_SENSOR("", "AC frequency lower limit", this->ac_frequency_lower_limit_sensor_);
+  LOG_SENSOR("", "AC frequency lower limit delay", this->ac_frequency_lower_limit_delay_sensor_);
 
   LOG_TEXT_SENSOR("", "Operation mode", this->operation_mode_text_sensor_);
   LOG_TEXT_SENSOR("", "Errors", this->errors_text_sensor_);

@@ -30,6 +30,36 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void set_current_limit_sensor(sensor::Sensor *current_limit_sensor) { current_limit_sensor_ = current_limit_sensor; }
   void set_voltage_limit_sensor(sensor::Sensor *voltage_limit_sensor) { voltage_limit_sensor_ = voltage_limit_sensor; }
   void set_uptime_sensor(sensor::Sensor *uptime_sensor) { uptime_sensor_ = uptime_sensor; }
+  void set_ac_voltage_nominal_sensor(sensor::Sensor *ac_voltage_nominal_sensor) {
+    ac_voltage_nominal_sensor_ = ac_voltage_nominal_sensor;
+  }
+  void set_ac_frequency_nominal_sensor(sensor::Sensor *ac_frequency_nominal_sensor) {
+    ac_frequency_nominal_sensor_ = ac_frequency_nominal_sensor;
+  }
+  void set_ac_voltage_upper_limit_sensor(sensor::Sensor *ac_voltage_upper_limit_sensor) {
+    ac_voltage_upper_limit_sensor_ = ac_voltage_upper_limit_sensor;
+  }
+  void set_ac_voltage_upper_limit_delay_sensor(sensor::Sensor *ac_voltage_upper_limit_delay_sensor) {
+    ac_voltage_upper_limit_delay_sensor_ = ac_voltage_upper_limit_delay_sensor;
+  }
+  void set_ac_voltage_lower_limit_sensor(sensor::Sensor *ac_voltage_lower_limit_sensor) {
+    ac_voltage_lower_limit_sensor_ = ac_voltage_lower_limit_sensor;
+  }
+  void set_ac_voltage_lower_limit_delay_sensor(sensor::Sensor *ac_voltage_lower_limit_delay_sensor) {
+    ac_voltage_lower_limit_delay_sensor_ = ac_voltage_lower_limit_delay_sensor;
+  }
+  void set_ac_frequency_upper_limit_sensor(sensor::Sensor *ac_frequency_upper_limit_sensor) {
+    ac_frequency_upper_limit_sensor_ = ac_frequency_upper_limit_sensor;
+  }
+  void set_ac_frequency_upper_limit_delay_sensor(sensor::Sensor *ac_frequency_upper_limit_delay_sensor) {
+    ac_frequency_upper_limit_delay_sensor_ = ac_frequency_upper_limit_delay_sensor;
+  }
+  void set_ac_frequency_lower_limit_sensor(sensor::Sensor *ac_frequency_lower_limit_sensor) {
+    ac_frequency_lower_limit_sensor_ = ac_frequency_lower_limit_sensor;
+  }
+  void set_ac_frequency_lower_limit_delay_sensor(sensor::Sensor *ac_frequency_lower_limit_delay_sensor) {
+    ac_frequency_lower_limit_delay_sensor_ = ac_frequency_lower_limit_delay_sensor;
+  }
   void set_error_history_error_code_sensor(uint8_t slot, sensor::Sensor *error_code_sensor) {
     this->error_history_[slot].error_code_sensor_ = error_code_sensor;
   }
@@ -67,6 +97,16 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   sensor::Sensor *current_limit_sensor_;
   sensor::Sensor *voltage_limit_sensor_;
   sensor::Sensor *uptime_sensor_;
+  sensor::Sensor *ac_voltage_nominal_sensor_;
+  sensor::Sensor *ac_frequency_nominal_sensor_;
+  sensor::Sensor *ac_voltage_upper_limit_sensor_;
+  sensor::Sensor *ac_voltage_upper_limit_delay_sensor_;
+  sensor::Sensor *ac_voltage_lower_limit_sensor_;
+  sensor::Sensor *ac_voltage_lower_limit_delay_sensor_;
+  sensor::Sensor *ac_frequency_upper_limit_sensor_;
+  sensor::Sensor *ac_frequency_upper_limit_delay_sensor_;
+  sensor::Sensor *ac_frequency_lower_limit_sensor_;
+  sensor::Sensor *ac_frequency_lower_limit_delay_sensor_;
 
   struct ErrorHistorySlot {
     sensor::Sensor *error_code_sensor_{nullptr};
@@ -83,7 +123,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void on_status_data_(const std::string &data);
   void on_device_type_data_(const std::string &data);
   void on_output_power_data_(const std::string &data);
-  void on_settings_data_(const std::string &data);
+  void on_grid_disconnect_parameters_data_(const std::string &data);
   void on_error_history_data_(const std::string &data);
   void on_current_limit_data_(const std::string &data);
   void on_operation_mode_data_(const std::string &data);
@@ -96,6 +136,14 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void track_online_status_();
 
   bool check_bit_(uint16_t mask, uint16_t flag) { return (mask & flag) == flag; }
+
+  float count_to_hertz_(int count) {
+    if (count > 0) {
+      return 1502500 / count;
+    }
+
+    return NAN;
+  }
 };
 
 }  // namespace aesgi

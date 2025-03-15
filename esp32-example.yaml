@@ -96,6 +96,24 @@ sensor:
       name: "${name} voltage limit"
     uptime:
       name: "${name} uptime"
+    ac_voltage_nominal:
+      name: "${name} ac voltage nominal"
+    ac_frequency_nominal:
+      name: "${name} ac frequency nominal"
+    ac_voltage_upper_limit:
+      name: "${name} ac voltage upper limit"
+    ac_voltage_upper_limit_delay:
+      name: "${name} ac voltage upper limit delay"
+    ac_voltage_lower_limit:
+      name: "${name} ac voltage lower limit"
+    ac_voltage_lower_limit_delay:
+      name: "${name} ac voltage lower limit delay"
+    ac_frequency_upper_limit:
+      name: "${name} ac frequency upper limit"
+    ac_frequency_upper_limit_delay:
+      name: "${name} ac frequency upper limit delay"
+    ac_frequency_lower_limit:
+      name: "${name} ac frequency lower limit"
 
     error_history_slot1_error_code:
       name: "${name} error history slot1 error code"
