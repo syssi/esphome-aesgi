@@ -11,7 +11,7 @@ void AesgiButton::dump_config() { LOG_BUTTON("", "Aesgi Button", this); }
 void AesgiButton::press_action() {
   if (this->holding_register_ == 'B') {
     this->parent_->send(this->holding_register_, "0 00.0");
-    break;
+    return;
   }
 
   this->parent_->send(this->holding_register_);
