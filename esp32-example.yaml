@@ -69,6 +69,15 @@ binary_sensor:
     online_status:
       name: "${name} online status"
 
+button:
+  - platform: aesgi
+    aesgi_id: inverter0
+    auto_test:
+      name: "${name} auto test"
+    # The operation mode battery can be enabled by setting the battery voltage limit
+    operation_mode_pv:
+      name: "${name} operation mode pv"
+
 number:
   - platform: aesgi
     aesgi_id: inverter0
