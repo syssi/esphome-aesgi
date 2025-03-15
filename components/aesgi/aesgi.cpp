@@ -15,14 +15,14 @@ static const uint8_t AESGI_COMMAND_OUTPUT_POWER = 'L';
 static const uint8_t AESGI_COMMAND_AUTO_TEST = 'A';
 static const uint8_t AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS = 'P';
 static const uint8_t AESGI_COMMAND_ERROR_HISTORY = 'F';
-static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
+static const uint8_t AESGI_COMMAND_BATTERY_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
 
 static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 7;
 static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
     AESGI_COMMAND_STATUS,         AESGI_COMMAND_DEVICE_TYPE,
     AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS,
-    AESGI_COMMAND_ERROR_HISTORY,  AESGI_COMMAND_CURRENT_LIMIT,
+    AESGI_COMMAND_ERROR_HISTORY,  AESGI_COMMAND_BATTERY_CURRENT_LIMIT,
     AESGI_COMMAND_OPERATION_MODE,
 };
 
@@ -49,8 +49,8 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     case AESGI_COMMAND_ERROR_HISTORY:
       this->on_error_history_data_(data);
       break;
-    case AESGI_COMMAND_CURRENT_LIMIT:
-      this->on_current_limit_data_(data);
+    case AESGI_COMMAND_BATTERY_CURRENT_LIMIT:
+      this->on_battery_current_limit_data_(data);
       break;
     case AESGI_COMMAND_OPERATION_MODE:
       this->on_operation_mode_data_(data);
@@ -215,19 +215,19 @@ void Aesgi::on_error_history_data_(const std::string &data) {
   }
 }
 
-void Aesgi::on_current_limit_data_(const std::string &data) {
+void Aesgi::on_battery_current_limit_data_(const std::string &data) {
   if (data.size() < 12) {
-    ESP_LOGW(TAG, "Current limit frame too short. Skipping");
+    ESP_LOGW(TAG, "Battery current limit frame too short. Skipping");
     return;
   }
 
-  ESP_LOGI(TAG, "Current limit frame received (%zu bytes)", data.size());
+  ESP_LOGI(TAG, "Battery current limit frame received (%zu bytes)", data.size());
 
   int current_limit;
 
   // *29S 11.5 \xED\r
   if (sscanf(data.c_str(), "*%*s %d", &current_limit) != 1) {  // NOLINT
-    ESP_LOGE(TAG, "Parsing current limit response failed: %s", data.c_str());
+    ESP_LOGE(TAG, "Parsing battery current limit response failed: %s", data.c_str());
     return;
   }
 
