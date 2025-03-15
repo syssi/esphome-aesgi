@@ -63,11 +63,13 @@ aesgi:
 
 binary_sensor:
   - platform: aesgi
+    aesgi_id: inverter0
     online_status:
       name: "${name} online status"
 
 sensor:
   - platform: aesgi
+    aesgi_id: inverter0
     status:
       name: "${name} status"
     dc_voltage:
@@ -141,6 +143,7 @@ sensor:
 
 text_sensor:
   - platform: aesgi
+    aesgi_id: inverter0
     operation_mode:
       name: "${name} operation mode"
     errors:
