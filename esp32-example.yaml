@@ -94,6 +94,34 @@ sensor:
       name: "${name} current limit"
     voltage_limit:
       name: "${name} voltage limit"
+    uptime:
+      name: "${name} uptime"
+
+    error_history_slot1_error_code:
+      name: "${name} error history slot1 error code"
+    error_history_slot1_error_time:
+      name: "${name} error history slot1 error time"
+    error_history_slot2_error_code:
+      name: "${name} error history slot2 error code"
+    error_history_slot2_error_time:
+      name: "${name} error history slot2 error time"
+    error_history_slot3_error_code:
+      name: "${name} error history slot3 error code"
+    error_history_slot3_error_time:
+      name: "${name} error history slot3 error time"
+    error_history_slot4_error_code:
+      name: "${name} error history slot4 error code"
+    error_history_slot4_error_time:
+      name: "${name} error history slot4 error time"
+    error_history_slot5_error_code:
+      name: "${name} error history slot5 error code"
+    error_history_slot5_error_time:
+      name: "${name} error history slot5 error time"
+    # This is the most recent error
+    error_history_slot6_error_code:
+      name: "${name} error history slot6 error code"
+    error_history_slot6_error_time:
+      name: "${name} error history slot6 error time"
 
 text_sensor:
   - platform: aesgi

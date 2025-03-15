@@ -14,14 +14,14 @@ static const uint8_t AESGI_COMMAND_DEVICE_TYPE = '9';
 static const uint8_t AESGI_COMMAND_OUTPUT_POWER = 'L';
 static const uint8_t AESGI_COMMAND_AUTO_TEST = 'A';
 static const uint8_t AESGI_COMMAND_SETTINGS = 'P';
-static const uint8_t AESGI_COMMAND_ERRORS = 'F';
+static const uint8_t AESGI_COMMAND_ERROR_HISTORY = 'F';
 static const uint8_t AESGI_COMMAND_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
 
 static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 7;
 static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
-    AESGI_COMMAND_STATUS, AESGI_COMMAND_DEVICE_TYPE,   AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_SETTINGS,
-    AESGI_COMMAND_ERRORS, AESGI_COMMAND_CURRENT_LIMIT, AESGI_COMMAND_OPERATION_MODE,
+    AESGI_COMMAND_STATUS,        AESGI_COMMAND_DEVICE_TYPE,   AESGI_COMMAND_OUTPUT_POWER,   AESGI_COMMAND_SETTINGS,
+    AESGI_COMMAND_ERROR_HISTORY, AESGI_COMMAND_CURRENT_LIMIT, AESGI_COMMAND_OPERATION_MODE,
 };
 
 void Aesgi::on_aesgi_rs485_data(const std::string &data) {
@@ -44,8 +44,8 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
     case AESGI_COMMAND_SETTINGS:
       this->on_settings_data_(data);
       break;
-    case AESGI_COMMAND_ERRORS:
-      this->on_errors_data_(data);
+    case AESGI_COMMAND_ERROR_HISTORY:
+      this->on_error_history_data_(data);
       break;
     case AESGI_COMMAND_CURRENT_LIMIT:
       this->on_current_limit_data_(data);
@@ -151,15 +151,38 @@ void Aesgi::on_settings_data_(const std::string &data) {
   // *29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r
 }
 
-void Aesgi::on_errors_data_(const std::string &data) {
+void Aesgi::on_error_history_data_(const std::string &data) {
   if (data.size() < 73) {
-    ESP_LOGW(TAG, "Errors frame too short. Skipping");
+    ESP_LOGW(TAG, "Error history frame too short. Skipping");
     return;
   }
 
-  ESP_LOGI(TAG, "Errors frame received (%zu bytes)", data.size());
+  ESP_LOGI(TAG, "Error history frame received (%zu bytes)", data.size());
+
+  int uptime;
+  int error_codes[6];
+  int error_times[6];
 
   // *29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r
+  const char* format = "*%*s %d %d %d %d %d %d %d %d %d %d %d %d %d";
+  int ret = sscanf(data.c_str(), format, &uptime,
+                   &error_codes[0], &error_times[0],
+                   &error_codes[1], &error_times[1],
+                   &error_codes[2], &error_times[2],
+                   &error_codes[3], &error_times[3],
+                   &error_codes[4], &error_times[4],
+                   &error_codes[5], &error_times[5]);
+
+  if (ret != 13) {
+    ESP_LOGE(TAG, "Parsing error history response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->uptime_sensor_, uptime);
+  for (int i = 0; i < 6; i++) {
+    this->publish_state_(this->error_history_[i].error_code_sensor_, error_codes[i]);
+    this->publish_state_(this->error_history_[i].error_time_sensor_, error_times[i]);
+  }
 }
 
 void Aesgi::on_current_limit_data_(const std::string &data) {
