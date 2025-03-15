@@ -150,6 +150,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void on_operation_mode_data_(const std::string &data);
 
   void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);
+  void publish_state_(number::Number *number, float value);
   void publish_state_(sensor::Sensor *sensor, float value);
   void publish_state_(text_sensor::TextSensor *text_sensor, const std::string &state);
   void publish_device_unavailable_();
