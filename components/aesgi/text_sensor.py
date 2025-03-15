@@ -13,9 +13,6 @@ CONF_ERRORS = "errors"
 CONF_OPERATION_MODE = "operation_mode"
 CONF_DEVICE_TYPE = "device_type"
 
-ICON_ERRORS = "mdi:alert-circle-outline"
-ICON_OPERATION_MODE = "mdi:heart-pulse"
-
 TEXT_SENSORS = [
     CONF_OPERATION_MODE,
     CONF_ERRORS,
@@ -27,19 +24,19 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
         cv.Optional(CONF_OPERATION_MODE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
-                cv.Optional(CONF_ICON, default=ICON_OPERATION_MODE): cv.icon,
+                cv.Optional(CONF_ICON, default="mdi:heart-pulse"): cv.icon,
             }
         ),
         cv.Optional(CONF_ERRORS): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
-                cv.Optional(CONF_ICON, default=ICON_ERRORS): cv.icon,
+                cv.Optional(CONF_ICON, default="mdi:alert-circle-outline"): cv.icon,
             }
         ),
         cv.Optional(CONF_DEVICE_TYPE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
-                cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
+                cv.Optional(CONF_ICON, default="mdi:chip"): cv.icon,
             }
         ),
     }

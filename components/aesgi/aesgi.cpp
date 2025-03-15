@@ -261,7 +261,7 @@ void Aesgi::update() {
   this->track_online_status_();
 
   // Loop through all commands if connected
-  if (this->next_command_ != AESGI_COMMAND_QUEUE_SIZE) {
+  if (this->next_command_ != AESGI_COMMAND_QUEUE_SIZE && this->no_response_count_ < MAX_NO_RESPONSE_COUNT) {
     ESP_LOGW(TAG,
              "Command queue (%d of %d) was not completely processed. "
              "Please increase the update_interval if you see this warning frequently",
@@ -316,6 +316,11 @@ void Aesgi::publish_device_unavailable_() {
   this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, NAN);
   this->publish_state_(this->ac_frequency_lower_limit_sensor_, NAN);
   this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, NAN);
+
+  for (auto &slot : this->error_history_) {
+    this->publish_state_(slot.error_code_sensor_, NAN);
+    this->publish_state_(slot.error_time_sensor_, NAN);
+  }
 }
 
 void Aesgi::publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state) {
