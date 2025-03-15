@@ -65,25 +65,27 @@ aesgi:
 
 binary_sensor:
   - platform: aesgi
+    aesgi_id: inverter0
     online_status:
       name: "${name} online status"
 
 sensor:
   - platform: aesgi
+    aesgi_id: inverter0
     status:
       name: "${name} status"
     dc_voltage:
-      name: "${name} dc voltage"
+      name: "${name} DC voltage"
     dc_current:
-      name: "${name} dc current"
+      name: "${name} DC current"
     dc_power:
-      name: "${name} dc power"
+      name: "${name} DC power"
     ac_voltage:
-      name: "${name} ac voltage"
+      name: "${name} AC voltage"
     ac_current:
-      name: "${name} ac current"
+      name: "${name} AC current"
     ac_power:
-      name: "${name} ac power"
+      name: "${name} AC power"
     device_temperature:
       name: "${name} device temperature"
     energy_today:
@@ -96,6 +98,24 @@ sensor:
       name: "${name} voltage limit"
     uptime:
       name: "${name} uptime"
+    ac_voltage_nominal:
+      name: "${name} AC voltage nominal"
+    ac_frequency_nominal:
+      name: "${name} AC frequency nominal"
+    ac_voltage_upper_limit:
+      name: "${name} AC voltage upper limit"
+    ac_voltage_upper_limit_delay:
+      name: "${name} AC voltage upper limit delay"
+    ac_voltage_lower_limit:
+      name: "${name} AC voltage lower limit"
+    ac_voltage_lower_limit_delay:
+      name: "${name} AC voltage lower limit delay"
+    ac_frequency_upper_limit:
+      name: "${name} AC frequency upper limit"
+    ac_frequency_upper_limit_delay:
+      name: "${name} AC frequency upper limit delay"
+    ac_frequency_lower_limit:
+      name: "${name} AC frequency lower limit"
 
     error_history_slot1_error_code:
       name: "${name} error history slot1 error code"
@@ -125,6 +145,7 @@ sensor:
 
 text_sensor:
   - platform: aesgi
+    aesgi_id: inverter0
     operation_mode:
       name: "${name} operation mode"
     errors:

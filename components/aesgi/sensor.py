@@ -7,6 +7,7 @@ from esphome.const import (
     DEVICE_CLASS_DURATION,
     DEVICE_CLASS_EMPTY,
     DEVICE_CLASS_ENERGY,
+    DEVICE_CLASS_FREQUENCY,
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_VOLTAGE,
@@ -17,6 +18,8 @@ from esphome.const import (
     UNIT_AMPERE,
     UNIT_CELSIUS,
     UNIT_EMPTY,
+    UNIT_HERTZ,
+    UNIT_MILLISECOND,
     UNIT_PERCENT,
     UNIT_SECOND,
     UNIT_VOLT,
@@ -43,6 +46,16 @@ CONF_OUTPUT_POWER = "output_power"
 CONF_CURRENT_LIMIT = "current_limit"
 CONF_VOLTAGE_LIMIT = "voltage_limit"
 CONF_UPTIME = "uptime"
+CONF_AC_VOLTAGE_NOMINAL = "ac_voltage_nominal"
+CONF_AC_FREQUENCY_NOMINAL = "ac_frequency_nominal"
+CONF_AC_VOLTAGE_UPPER_LIMIT = "ac_voltage_upper_limit"
+CONF_AC_VOLTAGE_UPPER_LIMIT_DELAY = "ac_voltage_upper_limit_delay"
+CONF_AC_VOLTAGE_LOWER_LIMIT = "ac_voltage_lower_limit"
+CONF_AC_VOLTAGE_LOWER_LIMIT_DELAY = "ac_voltage_lower_limit_delay"
+CONF_AC_FREQUENCY_UPPER_LIMIT = "ac_frequency_upper_limit"
+CONF_AC_FREQUENCY_UPPER_LIMIT_DELAY = "ac_frequency_upper_limit_delay"
+CONF_AC_FREQUENCY_LOWER_LIMIT = "ac_frequency_lower_limit"
+CONF_AC_FREQUENCY_LOWER_LIMIT_DELAY = "ac_frequency_lower_limit_delay"
 
 CONF_ERROR_HISTORY_SLOT1_ERROR_CODE = "error_history_slot1_error_code"
 CONF_ERROR_HISTORY_SLOT2_ERROR_CODE = "error_history_slot2_error_code"
@@ -72,6 +85,16 @@ SENSORS = [
     CONF_CURRENT_LIMIT,
     CONF_VOLTAGE_LIMIT,
     CONF_UPTIME,
+    CONF_AC_VOLTAGE_NOMINAL,
+    CONF_AC_FREQUENCY_NOMINAL,
+    CONF_AC_VOLTAGE_UPPER_LIMIT,
+    CONF_AC_VOLTAGE_UPPER_LIMIT_DELAY,
+    CONF_AC_VOLTAGE_LOWER_LIMIT,
+    CONF_AC_VOLTAGE_LOWER_LIMIT_DELAY,
+    CONF_AC_FREQUENCY_UPPER_LIMIT,
+    CONF_AC_FREQUENCY_UPPER_LIMIT_DELAY,
+    CONF_AC_FREQUENCY_LOWER_LIMIT,
+    CONF_AC_FREQUENCY_LOWER_LIMIT_DELAY,
 ]
 
 ERROR_HISTORY_ERROR_CODES = [
@@ -224,48 +247,111 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
             state_class=STATE_CLASS_MEASUREMENT,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_ERROR_HISTORY_SLOT1_ERROR_TIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             icon="mdi:clock-outline",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_ERROR_HISTORY_SLOT2_ERROR_TIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             icon="mdi:clock-outline",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_ERROR_HISTORY_SLOT3_ERROR_TIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             icon="mdi:clock-outline",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_ERROR_HISTORY_SLOT4_ERROR_TIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             icon="mdi:clock-outline",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_ERROR_HISTORY_SLOT5_ERROR_TIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             icon="mdi:clock-outline",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_ERROR_HISTORY_SLOT6_ERROR_TIME): sensor.sensor_schema(
             unit_of_measurement=UNIT_SECOND,
             icon="mdi:clock-outline",
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_EMPTY,
+        ),
+        cv.Optional(CONF_AC_VOLTAGE_NOMINAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLT,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_VOLTAGE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_FREQUENCY_NOMINAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_HERTZ,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_FREQUENCY,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_VOLTAGE_UPPER_LIMIT): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLT,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_VOLTAGE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_VOLTAGE_UPPER_LIMIT_DELAY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLISECOND,
+            icon="mdi:timer-cancel-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_VOLTAGE_LOWER_LIMIT): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLT,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_VOLTAGE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_VOLTAGE_LOWER_LIMIT_DELAY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLISECOND,
+            icon="mdi:timer-cancel-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_FREQUENCY_UPPER_LIMIT): sensor.sensor_schema(
+            unit_of_measurement=UNIT_HERTZ,
+            accuracy_decimals=2,
+            device_class=DEVICE_CLASS_FREQUENCY,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_FREQUENCY_UPPER_LIMIT_DELAY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLISECOND,
+            icon="mdi:timer-cancel-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_FREQUENCY_LOWER_LIMIT): sensor.sensor_schema(
+            unit_of_measurement=UNIT_HERTZ,
+            accuracy_decimals=2,
+            device_class=DEVICE_CLASS_FREQUENCY,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_AC_FREQUENCY_LOWER_LIMIT_DELAY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLISECOND,
+            icon="mdi:timer-cancel-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
             entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
     }
