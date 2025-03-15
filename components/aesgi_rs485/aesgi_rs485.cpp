@@ -131,5 +131,28 @@ void AesgiRs485::send(uint8_t address, uint8_t command, const std::string &value
   this->flush();
 }
 
+void AesgiRs485::send_broadcast(uint8_t command, const std::string &value) {
+  size_t frame_len = 5 + (value.empty() ? 0 : 1 + value.size()) + 1;
+  std::vector<uint8_t> frame(frame_len);
+
+  frame[0] = '#';
+  frame[1] = 'b';
+  frame[2] = '0';
+  frame[3] = '1';
+  frame[4] = command;
+
+  if (!value.empty()) {
+    frame[5] = ' ';
+    for (size_t i = 0; i < value.size(); i++) {
+      frame[6 + i] = value[i];
+    }
+  }
+
+  frame[frame_len - 1] = '\r';
+
+  this->write_array(frame.data(), frame_len);
+  this->flush();
+}
+
 }  // namespace aesgi_rs485
 }  // namespace esphome

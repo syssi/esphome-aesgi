@@ -10,6 +10,13 @@ void AesgiNumber::dump_config() { LOG_NUMBER("", "Aesgi Number", this); }
 void AesgiNumber::control(float value) {
   char buffer[7] = {0};
 
+  if (this->holding_register_ == '8') {
+    snprintf(buffer, sizeof(buffer), "%03d", (int) value);
+    this->parent_->send_broadcast(this->holding_register_, buffer);
+    this->publish_state(value);
+    return;
+  }
+
   if (this->holding_register_ == 'L') {
     snprintf(buffer, sizeof(buffer), "%03d", (int) value);
   }

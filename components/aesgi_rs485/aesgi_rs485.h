@@ -21,6 +21,7 @@ class AesgiRs485 : public uart::UARTDevice, public Component {
   float get_setup_priority() const override;
 
   void send(uint8_t address, uint8_t command, const std::string &value = "");
+  void send_broadcast(uint8_t command, const std::string &value = "");
   void set_rx_timeout(uint16_t rx_timeout) { rx_timeout_ = rx_timeout; }
 
  protected:
@@ -39,6 +40,7 @@ class AesgiRs485Device {
   virtual void on_aesgi_rs485_data(const std::string &data) = 0;
 
   void send(uint8_t command, const std::string &value = "") { this->parent_->send(address_, command, value); }
+  void send_broadcast(uint8_t command, const std::string &value = "") { this->parent_->send_broadcast(command, value); }
 
  protected:
   friend AesgiRs485;
