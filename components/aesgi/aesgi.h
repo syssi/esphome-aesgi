@@ -29,6 +29,13 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void set_output_power_sensor(sensor::Sensor *output_power_sensor) { output_power_sensor_ = output_power_sensor; }
   void set_current_limit_sensor(sensor::Sensor *current_limit_sensor) { current_limit_sensor_ = current_limit_sensor; }
   void set_voltage_limit_sensor(sensor::Sensor *voltage_limit_sensor) { voltage_limit_sensor_ = voltage_limit_sensor; }
+  void set_uptime_sensor(sensor::Sensor *uptime_sensor) { uptime_sensor_ = uptime_sensor; }
+  void set_error_history_error_code_sensor(uint8_t slot, sensor::Sensor *error_code_sensor) {
+    this->error_history_[slot].error_code_sensor_ = error_code_sensor;
+  }
+  void set_error_history_error_time_sensor(uint8_t slot, sensor::Sensor *error_time_sensor) {
+    this->error_history_[slot].error_time_sensor_ = error_time_sensor;
+  }
 
   void set_errors_text_sensor(text_sensor::TextSensor *errors_text_sensor) { errors_text_sensor_ = errors_text_sensor; }
   void set_operation_mode_text_sensor(text_sensor::TextSensor *operation_mode_text_sensor) {
@@ -59,6 +66,12 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   sensor::Sensor *output_power_sensor_;
   sensor::Sensor *current_limit_sensor_;
   sensor::Sensor *voltage_limit_sensor_;
+  sensor::Sensor *uptime_sensor_;
+
+  struct ErrorHistorySlot {
+    sensor::Sensor *error_code_sensor_{nullptr};
+    sensor::Sensor *error_time_sensor_{nullptr};
+  } error_history_[6];
 
   text_sensor::TextSensor *operation_mode_text_sensor_;
   text_sensor::TextSensor *errors_text_sensor_;
@@ -71,7 +84,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void on_device_type_data_(const std::string &data);
   void on_output_power_data_(const std::string &data);
   void on_settings_data_(const std::string &data);
-  void on_errors_data_(const std::string &data);
+  void on_error_history_data_(const std::string &data);
   void on_current_limit_data_(const std::string &data);
   void on_operation_mode_data_(const std::string &data);
 

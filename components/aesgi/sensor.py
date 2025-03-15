@@ -4,6 +4,7 @@ import esphome.config_validation as cv
 from esphome.const import (
     CONF_STATUS,
     DEVICE_CLASS_CURRENT,
+    DEVICE_CLASS_DURATION,
     DEVICE_CLASS_EMPTY,
     DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_POWER,
@@ -17,6 +18,7 @@ from esphome.const import (
     UNIT_CELSIUS,
     UNIT_EMPTY,
     UNIT_PERCENT,
+    UNIT_SECOND,
     UNIT_VOLT,
     UNIT_WATT,
     UNIT_WATT_HOURS,
@@ -40,6 +42,21 @@ CONF_ENERGY_TODAY = "energy_today"
 CONF_OUTPUT_POWER = "output_power"
 CONF_CURRENT_LIMIT = "current_limit"
 CONF_VOLTAGE_LIMIT = "voltage_limit"
+CONF_UPTIME = "uptime"
+
+CONF_ERROR_HISTORY_SLOT1_ERROR_CODE = "error_history_slot1_error_code"
+CONF_ERROR_HISTORY_SLOT2_ERROR_CODE = "error_history_slot2_error_code"
+CONF_ERROR_HISTORY_SLOT3_ERROR_CODE = "error_history_slot3_error_code"
+CONF_ERROR_HISTORY_SLOT4_ERROR_CODE = "error_history_slot4_error_code"
+CONF_ERROR_HISTORY_SLOT5_ERROR_CODE = "error_history_slot5_error_code"
+CONF_ERROR_HISTORY_SLOT6_ERROR_CODE = "error_history_slot6_error_code"
+
+CONF_ERROR_HISTORY_SLOT1_ERROR_TIME = "error_history_slot1_error_time"
+CONF_ERROR_HISTORY_SLOT2_ERROR_TIME = "error_history_slot2_error_time"
+CONF_ERROR_HISTORY_SLOT3_ERROR_TIME = "error_history_slot3_error_time"
+CONF_ERROR_HISTORY_SLOT4_ERROR_TIME = "error_history_slot4_error_time"
+CONF_ERROR_HISTORY_SLOT5_ERROR_TIME = "error_history_slot5_error_time"
+CONF_ERROR_HISTORY_SLOT6_ERROR_TIME = "error_history_slot6_error_time"
 
 SENSORS = [
     CONF_STATUS,
@@ -54,6 +71,25 @@ SENSORS = [
     CONF_OUTPUT_POWER,
     CONF_CURRENT_LIMIT,
     CONF_VOLTAGE_LIMIT,
+    CONF_UPTIME,
+]
+
+ERROR_HISTORY_ERROR_CODES = [
+    CONF_ERROR_HISTORY_SLOT1_ERROR_CODE,
+    CONF_ERROR_HISTORY_SLOT2_ERROR_CODE,
+    CONF_ERROR_HISTORY_SLOT3_ERROR_CODE,
+    CONF_ERROR_HISTORY_SLOT4_ERROR_CODE,
+    CONF_ERROR_HISTORY_SLOT5_ERROR_CODE,
+    CONF_ERROR_HISTORY_SLOT6_ERROR_CODE,
+]
+
+ERROR_HISTORY_ERROR_TIMES = [
+    CONF_ERROR_HISTORY_SLOT1_ERROR_TIME,
+    CONF_ERROR_HISTORY_SLOT2_ERROR_TIME,
+    CONF_ERROR_HISTORY_SLOT3_ERROR_TIME,
+    CONF_ERROR_HISTORY_SLOT4_ERROR_TIME,
+    CONF_ERROR_HISTORY_SLOT5_ERROR_TIME,
+    CONF_ERROR_HISTORY_SLOT6_ERROR_TIME,
 ]
 
 # pylint: disable=too-many-function-args
@@ -139,6 +175,99 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
             device_class=DEVICE_CLASS_VOLTAGE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
+        cv.Optional(CONF_UPTIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:timer",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT1_ERROR_CODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon="mdi:alert-circle-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT2_ERROR_CODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon="mdi:alert-circle-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT3_ERROR_CODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon="mdi:alert-circle-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT4_ERROR_CODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon="mdi:alert-circle-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT5_ERROR_CODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon="mdi:alert-circle-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT6_ERROR_CODE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            icon="mdi:alert-circle-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT1_ERROR_TIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:clock-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT2_ERROR_TIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:clock-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT3_ERROR_TIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:clock-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT4_ERROR_TIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:clock-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT5_ERROR_TIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:clock-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CONF_ERROR_HISTORY_SLOT6_ERROR_TIME): sensor.sensor_schema(
+            unit_of_measurement=UNIT_SECOND,
+            icon="mdi:clock-outline",
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
     }
 )
 
@@ -150,3 +279,13 @@ async def to_code(config):
             conf = config[key]
             sens = await sensor.new_sensor(conf)
             cg.add(getattr(hub, f"set_{key}_sensor")(sens))
+    for i, key in enumerate(ERROR_HISTORY_ERROR_CODES):
+        if key in config:
+            conf = config[key]
+            sens = await sensor.new_sensor(conf)
+            cg.add(hub.set_error_history_error_code_sensor(i, sens))
+    for i, key in enumerate(ERROR_HISTORY_ERROR_TIMES):
+        if key in config:
+            conf = config[key]
+            sens = await sensor.new_sensor(conf)
+            cg.add(hub.set_error_history_error_time_sensor(i, sens))
