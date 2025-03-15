@@ -94,6 +94,8 @@ void Aesgi::on_status_data_(const std::string &data) {
   }
 
   this->publish_state_(this->status_sensor_, status);
+  this->publish_state_(this->errors_text_sensor_, "");
+
   this->publish_state_(this->dc_voltage_sensor_, dc_voltage);
   this->publish_state_(this->dc_current_sensor_, dc_current);
   this->publish_state_(this->dc_power_sensor_, dc_power);
@@ -288,16 +290,32 @@ void Aesgi::reset_online_status_tracker_() {
 void Aesgi::publish_device_unavailable_() {
   this->publish_state_(this->online_status_binary_sensor_, false);
   this->publish_state_(this->errors_text_sensor_, "Offline");
+  this->publish_state_(this->operation_mode_text_sensor_, "Unknown");
+  this->publish_state_(this->device_type_text_sensor_, "Unknown");
 
-  this->publish_state_(status_sensor_, NAN);
-  this->publish_state_(dc_voltage_sensor_, NAN);
-  this->publish_state_(dc_current_sensor_, NAN);
-  this->publish_state_(dc_power_sensor_, NAN);
-  this->publish_state_(ac_voltage_sensor_, NAN);
-  this->publish_state_(ac_current_sensor_, NAN);
-  this->publish_state_(ac_power_sensor_, NAN);
-  this->publish_state_(device_temperature_sensor_, NAN);
-  this->publish_state_(energy_today_sensor_, NAN);
+  this->publish_state_(this->status_sensor_, NAN);
+  this->publish_state_(this->dc_voltage_sensor_, NAN);
+  this->publish_state_(this->dc_current_sensor_, NAN);
+  this->publish_state_(this->dc_power_sensor_, NAN);
+  this->publish_state_(this->ac_voltage_sensor_, NAN);
+  this->publish_state_(this->ac_current_sensor_, NAN);
+  this->publish_state_(this->ac_power_sensor_, NAN);
+  this->publish_state_(this->device_temperature_sensor_, NAN);
+  this->publish_state_(this->energy_today_sensor_, NAN);
+  this->publish_state_(this->output_power_sensor_, NAN);
+  this->publish_state_(this->current_limit_sensor_, NAN);
+  this->publish_state_(this->voltage_limit_sensor_, NAN);
+  this->publish_state_(this->uptime_sensor_, NAN);
+  this->publish_state_(this->ac_voltage_nominal_sensor_, NAN);
+  this->publish_state_(this->ac_frequency_nominal_sensor_, NAN);
+  this->publish_state_(this->ac_voltage_upper_limit_sensor_, NAN);
+  this->publish_state_(this->ac_voltage_upper_limit_delay_sensor_, NAN);
+  this->publish_state_(this->ac_voltage_lower_limit_sensor_, NAN);
+  this->publish_state_(this->ac_voltage_lower_limit_delay_sensor_, NAN);
+  this->publish_state_(this->ac_frequency_upper_limit_sensor_, NAN);
+  this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, NAN);
+  this->publish_state_(this->ac_frequency_lower_limit_sensor_, NAN);
+  this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, NAN);
 }
 
 void Aesgi::publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state) {
