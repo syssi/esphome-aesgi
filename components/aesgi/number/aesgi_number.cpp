@@ -11,22 +11,22 @@ void AesgiNumber::control(float value) {
   char buffer[7] = {0};
 
   if (this->holding_register_ == '8') {
-    snprintf(buffer, sizeof(buffer), "%03d", (int) value);
+    snprintf(buffer, sizeof(buffer), "%03.0f", value);
     this->parent_->send_broadcast(this->holding_register_, buffer);
     this->publish_state(value);
     return;
   }
 
   if (this->holding_register_ == 'L') {
-    snprintf(buffer, sizeof(buffer), "%03d", (int) value);
+    snprintf(buffer, sizeof(buffer), "%03.0f", value);
   }
 
   if (this->holding_register_ == 'B') {
-    snprintf(buffer, sizeof(buffer), "%d %2.1f", (value > 0.0f) ? 2 : 0, value);
+    snprintf(buffer, sizeof(buffer), "%d %04.1f", (value > 0.0f) ? 2 : 0, value);
   }
 
   if (this->holding_register_ == 'S') {
-    snprintf(buffer, sizeof(buffer), "%2.1f", value);
+    snprintf(buffer, sizeof(buffer), "%04.1f", value);
   }
 
   this->parent_->send(this->holding_register_, buffer);
