@@ -73,7 +73,7 @@ bool AesgiRs485::parse_aesgi_rs485_byte_(uint8_t byte) {
 
   uint8_t computed_crc = chksum(raw, frame_len - 2);
   uint8_t remote_crc = raw[frame_len - 2];
-  if (computed_crc != remote_crc && !(remote_crc == 0x20 && computed_crc == 0xED)) {
+  if (!this->verify_checksum_(computed_crc, remote_crc)) {
     ESP_LOGW(TAG, "CRC check failed! 0x%02X != 0x%02X", computed_crc, remote_crc);
     return false;
   }
