@@ -1,0 +1,55 @@
+substitutions:
+  name: aesgi-emu
+  tx_pin: GPIO4
+  rx_pin: GPIO5
+
+esphome:
+  name: ${name}
+
+esp8266:
+  board: d1_mini
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+ota:
+  platform: esphome
+
+logger:
+  level: DEBUG
+
+api:
+  reboot_timeout: 0s
+
+uart:
+  id: uart_0
+  baud_rate: 9600
+  tx_pin: ${tx_pin}
+  rx_pin: ${rx_pin}
+  debug:
+    direction: BOTH
+    dummy_receiver: true
+    after:
+      delimiter: "\r"
+    sequence:
+      - lambda: UARTDebug::log_string(direction, bytes);
+      - lambda:
+          std::string request(bytes.begin(), bytes.end());
+          if(request == "#030\r") {
+            id(uart_0).write_str("\n*030   0  45.9  4.91   222 239.0  0.90   212  50     71 D\r");
+            return;
+          }
+          if(request == "#039\r") {
+            id(uart_0).write_str("\n*039 500-90 1\r");
+            return;
+          }
+          if(request == "#03L\r") {
+            id(uart_0).write_str("\n*03L 100 \xAA\r");
+            return;
+          }
+          if(request == "#03P\r") {
+            id(uart_0).write_str("\n*03P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \r\r");
+            return;
+          }
+          ESP_LOGD("Lambda", "Unhandled request %s", request.c_str());

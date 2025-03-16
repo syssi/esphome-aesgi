@@ -70,7 +70,7 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
 }
 
 void Aesgi::on_status_data_(const std::string &data) {
-  if (data.size() < 58) {
+  if (data.size() < 58 - 1) {
     ESP_LOGW(TAG, "Status frame too short. Skipping");
     return;
   }
@@ -110,7 +110,7 @@ void Aesgi::on_status_data_(const std::string &data) {
 }
 
 void Aesgi::on_device_type_data_(const std::string &data) {
-  if (data.size() < 14) {
+  if (data.size() < 14 - 1) {
     ESP_LOGW(TAG, "Device type frame too short. Skipping");
     return;
   }
@@ -129,7 +129,7 @@ void Aesgi::on_device_type_data_(const std::string &data) {
 }
 
 void Aesgi::on_output_power_throttle_data_(const std::string &data) {
-  if (data.size() < 11) {
+  if (data.size() < 11 - 1) {
     ESP_LOGW(TAG, "Output power throttle frame too short. Skipping");
     return;
   }
@@ -150,7 +150,7 @@ void Aesgi::on_output_power_throttle_data_(const std::string &data) {
 }
 
 void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
-  if (data.size() < 62) {
+  if (data.size() < 62 - 1) {
     ESP_LOGW(TAG, "Grid disconnect parameters frame too short. Skipping");
     return;
   }
@@ -192,7 +192,7 @@ void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
 }
 
 void Aesgi::on_error_history_data_(const std::string &data) {
-  if (data.size() < 73) {
+  if (data.size() < 73 - 1) {
     ESP_LOGW(TAG, "Error history frame too short. Skipping");
     return;
   }
@@ -221,7 +221,7 @@ void Aesgi::on_error_history_data_(const std::string &data) {
 }
 
 void Aesgi::on_battery_current_limit_data_(const std::string &data) {
-  if (data.size() < 12) {
+  if (data.size() < 12 - 1) {
     ESP_LOGW(TAG, "Battery current limit frame too short. Skipping");
     return;
   }
@@ -241,7 +241,7 @@ void Aesgi::on_battery_current_limit_data_(const std::string &data) {
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
-  if (data.size() < 14) {
+  if (data.size() < 14 - 1) {
     ESP_LOGW(TAG, "Operation mode frame too short. Skipping");
     return;
   }

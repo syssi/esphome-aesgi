@@ -26,6 +26,14 @@ class AesgiRs485 : public uart::UARTDevice, public Component {
 
  protected:
   bool parse_aesgi_rs485_byte_(uint8_t byte);
+  bool verify_checksum_(const uint8_t computed_crc, const uint8_t remote_crc) {
+    // *03P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \r\r
+    if (remote_crc == 0x20 && ((computed_crc + 0x20) & 0xFF) == '\r') {
+      return true;
+    }
+
+    return computed_crc == remote_crc;
+  }
 
   std::vector<uint8_t> rx_buffer_;
   uint16_t rx_timeout_{50};

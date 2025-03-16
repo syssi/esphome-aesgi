@@ -11,8 +11,8 @@ ESPHome component to monitor a AEconversion micro inverter using RS485
 ## Supported devices
 
 * INV250-45EU RS485
-* INV350-60EU RS485  (`PV350W`)
-* INV500-90EU RS485
+* INV350-60EU RS485 (`PV350W`)
+* INV500-90EU RS485 (`500-90`)
 
 ## Requirements
 
