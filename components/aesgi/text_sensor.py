@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import text_sensor
 import esphome.config_validation as cv
-from esphome.const import CONF_ICON, CONF_ID
+from esphome.const import CONF_ID
 
 from . import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID
 
@@ -21,24 +21,13 @@ TEXT_SENSORS = [
 
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
-        cv.Optional(CONF_OPERATION_MODE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
-                cv.Optional(CONF_ICON, default="mdi:heart-pulse"): cv.icon,
-            }
+        cv.Optional(CONF_OPERATION_MODE): text_sensor.text_sensor_schema(
+            icon="mdi:heart-pulse"
         ),
-        cv.Optional(CONF_ERRORS): text_sensor.TEXT_SENSOR_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
-                cv.Optional(CONF_ICON, default="mdi:alert-circle-outline"): cv.icon,
-            }
+        cv.Optional(CONF_ERRORS): text_sensor.text_sensor_schema(
+            icon="mdi:alert-circle-outline"
         ),
-        cv.Optional(CONF_DEVICE_TYPE): text_sensor.TEXT_SENSOR_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(text_sensor.TextSensor),
-                cv.Optional(CONF_ICON, default="mdi:chip"): cv.icon,
-            }
-        ),
+        cv.Optional(CONF_DEVICE_TYPE): text_sensor.text_sensor_schema(icon="mdi:chip"),
     }
 )
 

@@ -2,8 +2,6 @@ import esphome.codegen as cg
 from esphome.components import number
 import esphome.config_validation as cv
 from esphome.const import (
-    CONF_ENTITY_CATEGORY,
-    CONF_ICON,
     CONF_ID,
     CONF_MAX_VALUE,
     CONF_MIN_VALUE,
@@ -37,17 +35,16 @@ NUMBERS = {
 
 AesgiNumber = aesgi_ns.class_("AesgiNumber", number.Number, cg.Component)
 
-AESGI_NUMBER_SCHEMA = number.NUMBER_SCHEMA.extend(
+AESGI_NUMBER_SCHEMA = number.number_schema(
+    AesgiNumber,
+    icon=ICON_EMPTY,
+    entity_category=ENTITY_CATEGORY_CONFIG,
+).extend(
     {
-        cv.GenerateID(): cv.declare_id(AesgiNumber),
-        cv.Optional(CONF_ICON, default=ICON_EMPTY): cv.icon,
         cv.Optional(CONF_STEP, default=0.1): cv.float_,
         cv.Optional(CONF_MODE, default="BOX"): cv.enum(number.NUMBER_MODES, upper=True),
-        cv.Optional(
-            CONF_ENTITY_CATEGORY, default=ENTITY_CATEGORY_CONFIG
-        ): cv.entity_category,
     }
-).extend(cv.COMPONENT_SCHEMA)
+)
 
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {

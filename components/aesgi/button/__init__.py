@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import button
 import esphome.config_validation as cv
-from esphome.const import CONF_ICON, CONF_ID
+from esphome.const import CONF_ID
 
 from .. import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID, aesgi_ns
 
@@ -21,17 +21,11 @@ AesgiButton = aesgi_ns.class_("AesgiButton", button.Button, cg.Component)
 
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
-        cv.Optional(CONF_AUTO_TEST): button.BUTTON_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(AesgiButton),
-                cv.Optional(CONF_ICON, default="mdi:check-circle-outline"): cv.icon,
-            }
+        cv.Optional(CONF_AUTO_TEST): button.button_schema(
+            AesgiButton, icon="mdi:check-circle-outline"
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_OPERATION_MODE_PV): button.BUTTON_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(AesgiButton),
-                cv.Optional(CONF_ICON, default="mdi:solar-power"): cv.icon,
-            }
+        cv.Optional(CONF_OPERATION_MODE_PV): button.button_schema(
+            AesgiButton, icon="mdi:solar-power"
         ).extend(cv.COMPONENT_SCHEMA),
     }
 )
