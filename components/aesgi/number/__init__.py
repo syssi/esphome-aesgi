@@ -44,7 +44,7 @@ AESGI_NUMBER_SCHEMA = number.number_schema(
         cv.Optional(CONF_STEP, default=0.1): cv.float_,
         cv.Optional(CONF_MODE, default="BOX"): cv.enum(number.NUMBER_MODES, upper=True),
     }
-)
+).extend(cv.COMPONENT_SCHEMA)
 
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
