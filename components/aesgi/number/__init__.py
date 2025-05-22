@@ -35,16 +35,22 @@ NUMBERS = {
 
 AesgiNumber = aesgi_ns.class_("AesgiNumber", number.Number, cg.Component)
 
-AESGI_NUMBER_SCHEMA = number.number_schema(
-    AesgiNumber,
-    icon=ICON_EMPTY,
-    entity_category=ENTITY_CATEGORY_CONFIG,
-).extend(
-    {
-        cv.Optional(CONF_STEP, default=0.1): cv.float_,
-        cv.Optional(CONF_MODE, default="BOX"): cv.enum(number.NUMBER_MODES, upper=True),
-    }
-).extend(cv.COMPONENT_SCHEMA)
+AESGI_NUMBER_SCHEMA = (
+    number.number_schema(
+        AesgiNumber,
+        icon=ICON_EMPTY,
+        entity_category=ENTITY_CATEGORY_CONFIG,
+    )
+    .extend(
+        {
+            cv.Optional(CONF_STEP, default=0.1): cv.float_,
+            cv.Optional(CONF_MODE, default="BOX"): cv.enum(
+                number.NUMBER_MODES, upper=True
+            ),
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA)
+)
 
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
