@@ -33,7 +33,7 @@ CONFIG_SCHEMA = cv.All(
         }
     )
     .extend(cv.polling_component_schema("5s"))
-    .extend(aesgi_rs485.aesgi_rs485_device_schema(1))
+    .extend(aesgi_rs485.aesgi_rs485_device_schema(1)),
 )
 
 
