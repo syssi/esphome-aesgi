@@ -13,7 +13,8 @@ AesgiRs485Device = aesgi_rs485_ns.class_("AesgiRs485Device")
 CONF_AESGI_RS485_ID = "aesgi_rs485_id"
 CONF_RX_TIMEOUT = "rx_timeout"
 
-CONFIG_SCHEMA = (
+CONFIG_SCHEMA = cv.All(
+    cv.require_esphome_version(2024, 12, 0),
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(AesgiRs485),
