@@ -23,10 +23,10 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
         cv.Optional(CONF_AUTO_TEST): button.button_schema(
             AesgiButton, icon="mdi:check-circle-outline"
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
         cv.Optional(CONF_OPERATION_MODE_PV): button.button_schema(
             AesgiButton, icon="mdi:solar-power"
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
     }
 )
 
