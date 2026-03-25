@@ -102,45 +102,45 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void update() override;
 
  protected:
-  binary_sensor::BinarySensor *online_status_binary_sensor_;
+  binary_sensor::BinarySensor *online_status_binary_sensor_{nullptr};
 
-  number::Number *output_power_throttle_number_;
-  number::Number *output_power_throttle_broadcast_number_;
-  number::Number *battery_current_limit_number_;
-  number::Number *battery_voltage_limit_number_;
+  number::Number *output_power_throttle_number_{nullptr};
+  number::Number *output_power_throttle_broadcast_number_{nullptr};
+  number::Number *battery_current_limit_number_{nullptr};
+  number::Number *battery_voltage_limit_number_{nullptr};
 
-  sensor::Sensor *status_sensor_;
-  sensor::Sensor *dc_voltage_sensor_;
-  sensor::Sensor *dc_current_sensor_;
-  sensor::Sensor *dc_power_sensor_;
-  sensor::Sensor *ac_voltage_sensor_;
-  sensor::Sensor *ac_current_sensor_;
-  sensor::Sensor *ac_power_sensor_;
-  sensor::Sensor *device_temperature_sensor_;
-  sensor::Sensor *energy_today_sensor_;
-  sensor::Sensor *output_power_throttle_sensor_;
-  sensor::Sensor *battery_current_limit_sensor_;
-  sensor::Sensor *battery_voltage_limit_sensor_;
-  sensor::Sensor *uptime_sensor_;
-  sensor::Sensor *ac_voltage_nominal_sensor_;
-  sensor::Sensor *ac_frequency_nominal_sensor_;
-  sensor::Sensor *ac_voltage_upper_limit_sensor_;
-  sensor::Sensor *ac_voltage_upper_limit_delay_sensor_;
-  sensor::Sensor *ac_voltage_lower_limit_sensor_;
-  sensor::Sensor *ac_voltage_lower_limit_delay_sensor_;
-  sensor::Sensor *ac_frequency_upper_limit_sensor_;
-  sensor::Sensor *ac_frequency_upper_limit_delay_sensor_;
-  sensor::Sensor *ac_frequency_lower_limit_sensor_;
-  sensor::Sensor *ac_frequency_lower_limit_delay_sensor_;
+  sensor::Sensor *status_sensor_{nullptr};
+  sensor::Sensor *dc_voltage_sensor_{nullptr};
+  sensor::Sensor *dc_current_sensor_{nullptr};
+  sensor::Sensor *dc_power_sensor_{nullptr};
+  sensor::Sensor *ac_voltage_sensor_{nullptr};
+  sensor::Sensor *ac_current_sensor_{nullptr};
+  sensor::Sensor *ac_power_sensor_{nullptr};
+  sensor::Sensor *device_temperature_sensor_{nullptr};
+  sensor::Sensor *energy_today_sensor_{nullptr};
+  sensor::Sensor *output_power_throttle_sensor_{nullptr};
+  sensor::Sensor *battery_current_limit_sensor_{nullptr};
+  sensor::Sensor *battery_voltage_limit_sensor_{nullptr};
+  sensor::Sensor *uptime_sensor_{nullptr};
+  sensor::Sensor *ac_voltage_nominal_sensor_{nullptr};
+  sensor::Sensor *ac_frequency_nominal_sensor_{nullptr};
+  sensor::Sensor *ac_voltage_upper_limit_sensor_{nullptr};
+  sensor::Sensor *ac_voltage_upper_limit_delay_sensor_{nullptr};
+  sensor::Sensor *ac_voltage_lower_limit_sensor_{nullptr};
+  sensor::Sensor *ac_voltage_lower_limit_delay_sensor_{nullptr};
+  sensor::Sensor *ac_frequency_upper_limit_sensor_{nullptr};
+  sensor::Sensor *ac_frequency_upper_limit_delay_sensor_{nullptr};
+  sensor::Sensor *ac_frequency_lower_limit_sensor_{nullptr};
+  sensor::Sensor *ac_frequency_lower_limit_delay_sensor_{nullptr};
 
   struct ErrorHistorySlot {
     sensor::Sensor *error_code_sensor_{nullptr};
     sensor::Sensor *error_time_sensor_{nullptr};
   } error_history_[6];
 
-  text_sensor::TextSensor *operation_mode_text_sensor_;
-  text_sensor::TextSensor *errors_text_sensor_;
-  text_sensor::TextSensor *device_type_text_sensor_;
+  text_sensor::TextSensor *operation_mode_text_sensor_{nullptr};
+  text_sensor::TextSensor *errors_text_sensor_{nullptr};
+  text_sensor::TextSensor *device_type_text_sensor_{nullptr};
 
   uint8_t no_response_count_{0};
   uint8_t next_command_{7};
