@@ -9,7 +9,6 @@ from esphome.const import (
     CONF_STEP,
     CONF_UNIT_OF_MEASUREMENT,
     ENTITY_CATEGORY_CONFIG,
-    ICON_EMPTY,
     UNIT_AMPERE,
     UNIT_PERCENT,
     UNIT_VOLT,
@@ -38,7 +37,7 @@ AesgiNumber = aesgi_ns.class_("AesgiNumber", number.Number, cg.Component)
 AESGI_NUMBER_SCHEMA = (
     number.number_schema(
         AesgiNumber,
-        icon=ICON_EMPTY,
+        icon=None,
         entity_category=ENTITY_CATEGORY_CONFIG,
     )
     .extend(
