@@ -1,6 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import text_sensor
 import esphome.config_validation as cv
+from esphome.const import ENTITY_CATEGORY_DIAGNOSTIC
 
 from . import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID
 
@@ -24,9 +25,13 @@ CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
             icon="mdi:heart-pulse"
         ),
         cv.Optional(CONF_ERRORS): text_sensor.text_sensor_schema(
-            icon="mdi:alert-circle-outline"
+            icon="mdi:alert-circle-outline",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
-        cv.Optional(CONF_DEVICE_TYPE): text_sensor.text_sensor_schema(icon="mdi:chip"),
+        cv.Optional(CONF_DEVICE_TYPE): text_sensor.text_sensor_schema(
+            icon="mdi:chip",
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
     }
 )
 
