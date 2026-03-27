@@ -4,6 +4,7 @@ import esphome.config_validation as cv
 from esphome.const import CONF_ADDRESS, CONF_ID
 
 DEPENDENCIES = ["uart"]
+CODEOWNERS = ["@syssi"]
 MULTI_CONF = True
 
 aesgi_rs485_ns = cg.esphome_ns.namespace("aesgi_rs485")
