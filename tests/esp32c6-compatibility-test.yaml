@@ -60,109 +60,109 @@ binary_sensor:
   - platform: aesgi
     aesgi_id: inverter0
     online_status:
-      name: "${name} online status"
+      name: "online status"
 
 button:
   - platform: aesgi
     aesgi_id: inverter0
     auto_test:
-      name: "${name} auto test"
+      name: "auto test"
     # The operation mode battery can be enabled by setting the battery voltage limit
     operation_mode_pv:
-      name: "${name} operation mode pv"
+      name: "operation mode pv"
 
 number:
   - platform: aesgi
     aesgi_id: inverter0
     output_power_throttle:
-      name: "${name} output power throttle"
+      name: "output power throttle"
     # output_power_throttle_broadcast:
-    #   name: "${name} output power throttle broadcast"
+    #   name: "output power throttle broadcast"
     battery_current_limit:
-      name: "${name} battery current limit"
+      name: "battery current limit"
     battery_voltage_limit:
-      name: "${name} battery voltage limit"
+      name: "battery voltage limit"
 
 sensor:
   - platform: aesgi
     aesgi_id: inverter0
     status:
-      name: "${name} status"
+      name: "status"
     dc_voltage:
-      name: "${name} DC voltage"
+      name: "DC voltage"
     dc_current:
-      name: "${name} DC current"
+      name: "DC current"
     dc_power:
-      name: "${name} DC power"
+      name: "DC power"
     ac_voltage:
-      name: "${name} AC voltage"
+      name: "AC voltage"
     ac_current:
-      name: "${name} AC current"
+      name: "AC current"
     ac_power:
-      name: "${name} AC power"
+      name: "AC power"
     device_temperature:
-      name: "${name} device temperature"
+      name: "device temperature"
     energy_today:
-      name: "${name} energy today"
+      name: "energy today"
     output_power_throttle:
-      name: "${name} output power throttle"
+      name: "output power throttle"
     battery_current_limit:
-      name: "${name} battery current limit"
+      name: "battery current limit"
     battery_voltage_limit:
-      name: "${name} battery voltage limit"
+      name: "battery voltage limit"
     uptime:
-      name: "${name} uptime"
+      name: "uptime"
     ac_voltage_nominal:
-      name: "${name} AC voltage nominal"
+      name: "AC voltage nominal"
     ac_frequency_nominal:
-      name: "${name} AC frequency nominal"
+      name: "AC frequency nominal"
     ac_voltage_upper_limit:
-      name: "${name} AC voltage upper limit"
+      name: "AC voltage upper limit"
     ac_voltage_upper_limit_delay:
-      name: "${name} AC voltage upper limit delay"
+      name: "AC voltage upper limit delay"
     ac_voltage_lower_limit:
-      name: "${name} AC voltage lower limit"
+      name: "AC voltage lower limit"
     ac_voltage_lower_limit_delay:
-      name: "${name} AC voltage lower limit delay"
+      name: "AC voltage lower limit delay"
     ac_frequency_upper_limit:
-      name: "${name} AC frequency upper limit"
+      name: "AC frequency upper limit"
     ac_frequency_upper_limit_delay:
-      name: "${name} AC frequency upper limit delay"
+      name: "AC frequency upper limit delay"
     ac_frequency_lower_limit:
-      name: "${name} AC frequency lower limit"
+      name: "AC frequency lower limit"
 
     error_history_slot1_error_code:
-      name: "${name} error history slot1 error code"
+      name: "error history slot1 error code"
     error_history_slot1_error_time:
-      name: "${name} error history slot1 error time"
+      name: "error history slot1 error time"
     error_history_slot2_error_code:
-      name: "${name} error history slot2 error code"
+      name: "error history slot2 error code"
     error_history_slot2_error_time:
-      name: "${name} error history slot2 error time"
+      name: "error history slot2 error time"
     error_history_slot3_error_code:
-      name: "${name} error history slot3 error code"
+      name: "error history slot3 error code"
     error_history_slot3_error_time:
-      name: "${name} error history slot3 error time"
+      name: "error history slot3 error time"
     error_history_slot4_error_code:
-      name: "${name} error history slot4 error code"
+      name: "error history slot4 error code"
     error_history_slot4_error_time:
-      name: "${name} error history slot4 error time"
+      name: "error history slot4 error time"
     error_history_slot5_error_code:
-      name: "${name} error history slot5 error code"
+      name: "error history slot5 error code"
     error_history_slot5_error_time:
-      name: "${name} error history slot5 error time"
+      name: "error history slot5 error time"
     # This is the most recent error
     error_history_slot6_error_code:
-      name: "${name} error history slot6 error code"
+      name: "error history slot6 error code"
     error_history_slot6_error_time:
-      name: "${name} error history slot6 error time"
+      name: "error history slot6 error time"
 
 text_sensor:
   - platform: aesgi
     aesgi_id: inverter0
     operation_mode:
-      name: "${name} operation mode"
+      name: "operation mode"
     errors:
-      name: "${name} errors"
+      name: "errors"
     device_type:
-      name: "${name} device type"
+      name: "device type"
