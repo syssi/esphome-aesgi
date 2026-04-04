@@ -137,7 +137,6 @@ SENSOR_DEFS = {
         "unit_of_measurement": UNIT_PERCENT,
         "icon": "mdi:solar-power",
         "accuracy_decimals": 0,
-        "device_class": DEVICE_CLASS_POWER,
         "state_class": STATE_CLASS_MEASUREMENT,
     },
     CONF_BATTERY_CURRENT_LIMIT: {
