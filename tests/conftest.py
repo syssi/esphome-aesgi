@@ -1,0 +1,26 @@
+"""Mock missing esphome external component dependencies for test collection."""
+
+import sys
+import types
+
+import esphome.codegen as cg
+
+
+def _make_modbus_mock(ns_name, *class_names):
+    """Return a namespace where Device classes are MockObjClass and functions return {}."""
+    _ns = cg.esphome_ns.namespace(f"_mock_{ns_name}")
+    _classes = {name: _ns.class_(name) for name in class_names}
+
+    class _MockModbus:
+        def __getattr__(self, name):
+            if name in _classes:
+                return _classes[name]
+            # Schema functions return empty dict; other callables return MagicMock
+            return lambda *a, **kw: {}
+
+    return _MockModbus()
+
+
+sys.modules["esphome.components.aesgi_rs485"] = _make_modbus_mock(
+    "aesgi_rs485", "AesgiRs485Device"
+)
