@@ -1,0 +1,12 @@
+uart:
+  - id: uart_bus
+    baud_rate: 9600
+
+aesgi_rs485:
+  - id: rs485_bus
+    uart_id: uart_bus
+
+aesgi:
+  - id: test_aesgi
+    aesgi_rs485_id: rs485_bus
+    address: 29
