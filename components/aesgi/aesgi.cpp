@@ -2,8 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 
-namespace esphome {
-namespace aesgi {
+namespace esphome::aesgi {
 
 static const char *const TAG = "aesgi";
 
@@ -392,5 +391,4 @@ void Aesgi::dump_config() {  // NOLINT(google-readability-function-size,readabil
   LOG_TEXT_SENSOR("", "Device Type", this->device_type_text_sensor_);
 }
 
-}  // namespace aesgi
-}  // namespace esphome
+}  // namespace esphome::aesgi

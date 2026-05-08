@@ -7,8 +7,7 @@
 #include "esphome/components/text_sensor/text_sensor.h"
 #include "esphome/components/aesgi_rs485/aesgi_rs485.h"
 
-namespace esphome {
-namespace aesgi {
+namespace esphome::aesgi {
 
 class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
  public:
@@ -172,5 +171,4 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   }
 };
 
-}  // namespace aesgi
-}  // namespace esphome
+}  // namespace esphome::aesgi

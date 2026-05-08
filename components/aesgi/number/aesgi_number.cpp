@@ -1,8 +1,7 @@
 #include "aesgi_number.h"
 #include "esphome/core/log.h"
 
-namespace esphome {
-namespace aesgi {
+namespace esphome::aesgi {
 
 static const char *const TAG = "aesgi.number";
 
@@ -33,5 +32,4 @@ void AesgiNumber::control(float value) {
   this->publish_state(value);
 }
 
-}  // namespace aesgi
-}  // namespace esphome
+}  // namespace esphome::aesgi
