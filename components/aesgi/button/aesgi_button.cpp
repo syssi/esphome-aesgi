@@ -2,8 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 
-namespace esphome {
-namespace aesgi {
+namespace esphome::aesgi {
 
 static const char *const TAG = "aesgi.button";
 
@@ -17,5 +16,4 @@ void AesgiButton::press_action() {
   this->parent_->send(this->holding_register_);
 }
 
-}  // namespace aesgi
-}  // namespace esphome
+}  // namespace esphome::aesgi

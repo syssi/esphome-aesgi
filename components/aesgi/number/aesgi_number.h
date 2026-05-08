@@ -4,8 +4,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/number/number.h"
 
-namespace esphome {
-namespace aesgi {
+namespace esphome::aesgi {
 
 class Aesgi;
 
@@ -22,5 +21,4 @@ class AesgiNumber : public number::Number, public Component {
   uint8_t holding_register_;
 };
 
-}  // namespace aesgi
-}  // namespace esphome
+}  // namespace esphome::aesgi

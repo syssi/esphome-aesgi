@@ -3,8 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/uart/uart.h"
 
-namespace esphome {
-namespace aesgi_rs485 {
+namespace esphome::aesgi_rs485 {
 
 class AesgiRs485Device;
 
@@ -57,5 +56,4 @@ class AesgiRs485Device {
   uint8_t address_;
 };
 
-}  // namespace aesgi_rs485
-}  // namespace esphome
+}  // namespace esphome::aesgi_rs485

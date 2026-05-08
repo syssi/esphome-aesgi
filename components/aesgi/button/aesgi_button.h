@@ -4,8 +4,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/button/button.h"
 
-namespace esphome {
-namespace aesgi {
+namespace esphome::aesgi {
 
 class Aesgi;
 class AesgiButton : public button::Button, public Component {
@@ -22,5 +21,4 @@ class AesgiButton : public button::Button, public Component {
   uint8_t holding_register_;
 };
 
-}  // namespace aesgi
-}  // namespace esphome
+}  // namespace esphome::aesgi

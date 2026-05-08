@@ -3,8 +3,7 @@
 #include "esphome/core/hal.h"
 #include "esphome/core/helpers.h"
 
-namespace esphome {
-namespace aesgi_rs485 {
+namespace esphome::aesgi_rs485 {
 
 static const char *const TAG = "aesgi_rs485";
 
@@ -154,5 +153,4 @@ void AesgiRs485::send_broadcast(uint8_t command, const std::string &value) {
   this->flush();
 }
 
-}  // namespace aesgi_rs485
-}  // namespace esphome
+}  // namespace esphome::aesgi_rs485
