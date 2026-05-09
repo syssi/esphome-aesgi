@@ -116,7 +116,7 @@ void Aesgi::on_device_type_data_(const std::string &data) {
 
   ESP_LOGI(TAG, "Device type frame received (%zu bytes)", data.size());
 
-  char device_type[6];
+  char device_type[7];
 
   // *299 PV350W \xA3\r
   if (sscanf(data.c_str(), "*%*s %6s", device_type) != 1) {  // NOLINT
