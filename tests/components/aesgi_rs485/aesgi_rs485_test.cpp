@@ -5,8 +5,7 @@ namespace esphome::aesgi_rs485::testing {
 
 // Real captured response from esp8266-inverter-emulator.yaml (address 29):
 // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-static const std::string REAL_STATUS_FRAME =
-    "*290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r";
+static const std::string REAL_STATUS_FRAME = "*290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r";
 
 // verify_checksum_ special case: remote_crc == 0x20 (space) and (crc + 0x20) & 0xFF == '\r'
 // This handles a quirk where the CRC byte is a space followed by a carriage-return-like value.
