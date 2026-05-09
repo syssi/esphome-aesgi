@@ -550,7 +550,7 @@ jobs:
       - name: Run C++ unit tests
         run: |
           . venv/bin/activate
-          script/cpp_unit_test.py aesgi
+          script/cpp_unit_test.py aesgi aesgi_rs485
         env:
           PLATFORMIO_LIBDEPS_DIR: ~/.platformio/libdeps
           ASAN_OPTIONS: detect_leaks=0
