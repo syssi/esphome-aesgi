@@ -25,8 +25,11 @@ class TestableAesgiRs485 : public AesgiRs485 {
 
   bool feed(const std::string &frame) {
     bool result = false;
-    for (char c : frame)
+    for (char c : frame) {
       result = parse_aesgi_rs485_byte_(static_cast<uint8_t>(c));
+      if (!result)
+        rx_buffer_.clear();
+    }
     return result;
   }
 };
