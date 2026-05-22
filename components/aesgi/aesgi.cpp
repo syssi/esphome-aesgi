@@ -28,7 +28,7 @@ static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
     AESGI_COMMAND_OPERATION_MODE,
 };
 
-static std::string read_field_(const std::string &data, size_t *pos) {
+static std::string read_field(const std::string &data, size_t *pos) {
   while (*pos < data.size() && data[*pos] == ' ')
     (*pos)++;
   const size_t begin = *pos;
@@ -37,7 +37,7 @@ static std::string read_field_(const std::string &data, size_t *pos) {
   return data.substr(begin, *pos - begin);
 }
 
-static void skip_field_(const std::string &data, size_t *pos) {
+static void skip_field(const std::string &data, size_t *pos) {
   while (*pos < data.size() && data[*pos] == ' ')
     (*pos)++;
   while (*pos < data.size() && data[*pos] != ' ')
@@ -88,10 +88,10 @@ void Aesgi::on_auto_test_data_(const std::string &data) {
   ESP_LOGI(TAG, "Auto test frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
   for (int i = 0; i < 10; i++)
-    skip_field_(data, &pos);
-  auto result = parse_number<int>(read_field_(data, &pos));
+    skip_field(data, &pos);
+  auto result = parse_number<int>(read_field(data, &pos));
 
   if (!result.has_value()) {
     ESP_LOGE(TAG, "Parsing auto test response failed: %s", data.c_str());
@@ -105,18 +105,18 @@ void Aesgi::on_status_data_(const std::string &data) {
   ESP_LOGI(TAG, "Status frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-  auto status = parse_number<int>(read_field_(data, &pos));
-  auto dc_voltage = parse_number<float>(read_field_(data, &pos));
-  auto dc_current = parse_number<float>(read_field_(data, &pos));
-  auto dc_power = parse_number<int>(read_field_(data, &pos));
-  auto ac_voltage = parse_number<float>(read_field_(data, &pos));
-  auto ac_current = parse_number<float>(read_field_(data, &pos));
-  auto ac_power = parse_number<int>(read_field_(data, &pos));
-  auto device_temperature = parse_number<int>(read_field_(data, &pos));
-  auto energy_today = parse_number<int>(read_field_(data, &pos));
+  auto status = parse_number<int>(read_field(data, &pos));
+  auto dc_voltage = parse_number<float>(read_field(data, &pos));
+  auto dc_current = parse_number<float>(read_field(data, &pos));
+  auto dc_power = parse_number<int>(read_field(data, &pos));
+  auto ac_voltage = parse_number<float>(read_field(data, &pos));
+  auto ac_current = parse_number<float>(read_field(data, &pos));
+  auto ac_power = parse_number<int>(read_field(data, &pos));
+  auto device_temperature = parse_number<int>(read_field(data, &pos));
+  auto energy_today = parse_number<int>(read_field(data, &pos));
 
   if (!status.has_value() || !dc_voltage.has_value() || !dc_current.has_value() || !dc_power.has_value() ||
       !ac_voltage.has_value() || !ac_current.has_value() || !ac_power.has_value() || !device_temperature.has_value() ||
@@ -141,10 +141,10 @@ void Aesgi::on_device_type_data_(const std::string &data) {
   ESP_LOGI(TAG, "Device type frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *299 PV350W \xA3\r
-  const std::string device_type = read_field_(data, &pos);
+  const std::string device_type = read_field(data, &pos);
 
   if (device_type.empty()) {
     ESP_LOGE(TAG, "Parsing device type frame response failed: %s", data.c_str());
@@ -158,10 +158,10 @@ void Aesgi::on_output_power_throttle_data_(const std::string &data) {
   ESP_LOGI(TAG, "Output power throttle frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *29L 100 \xB2\r
-  auto output_power = parse_number<int>(read_field_(data, &pos));
+  auto output_power = parse_number<int>(read_field(data, &pos));
 
   if (!output_power.has_value()) {
     ESP_LOGE(TAG, "Parsing output power throttle response failed: %s", data.c_str());
@@ -177,19 +177,19 @@ void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
   ESP_LOGI(TAG, "Grid disconnect parameters frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r
-  auto ac_voltage_nominal = parse_number<float>(read_field_(data, &pos));
-  auto ac_frequency_nominal = parse_number<float>(read_field_(data, &pos));
-  auto ac_voltage_upper_limit = parse_number<float>(read_field_(data, &pos));
-  auto ac_voltage_upper_limit_delay = parse_number<float>(read_field_(data, &pos));
-  auto ac_voltage_lower_limit = parse_number<float>(read_field_(data, &pos));
-  auto ac_voltage_lower_limit_delay = parse_number<float>(read_field_(data, &pos));
-  auto ac_frequency_upper_limit = parse_number<int>(read_field_(data, &pos));
-  auto ac_frequency_upper_limit_delay = parse_number<int>(read_field_(data, &pos));
-  auto ac_frequency_lower_limit = parse_number<int>(read_field_(data, &pos));
-  auto ac_frequency_lower_limit_delay = parse_number<int>(read_field_(data, &pos));
+  auto ac_voltage_nominal = parse_number<float>(read_field(data, &pos));
+  auto ac_frequency_nominal = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_upper_limit = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_upper_limit_delay = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_lower_limit = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_lower_limit_delay = parse_number<float>(read_field(data, &pos));
+  auto ac_frequency_upper_limit = parse_number<int>(read_field(data, &pos));
+  auto ac_frequency_upper_limit_delay = parse_number<int>(read_field(data, &pos));
+  auto ac_frequency_lower_limit = parse_number<int>(read_field(data, &pos));
+  auto ac_frequency_lower_limit_delay = parse_number<int>(read_field(data, &pos));
 
   if (!ac_voltage_nominal.has_value() || !ac_frequency_nominal.has_value() || !ac_voltage_upper_limit.has_value() ||
       !ac_voltage_upper_limit_delay.has_value() || !ac_voltage_lower_limit.has_value() ||
@@ -216,10 +216,10 @@ void Aesgi::on_error_history_data_(const std::string &data) {
   ESP_LOGI(TAG, "Error history frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r
-  auto uptime = parse_number<int>(read_field_(data, &pos));
+  auto uptime = parse_number<int>(read_field(data, &pos));
   if (!uptime.has_value()) {
     ESP_LOGE(TAG, "Parsing error history response failed: %s", data.c_str());
     return;
@@ -228,8 +228,8 @@ void Aesgi::on_error_history_data_(const std::string &data) {
   int error_codes[6];
   int error_times[6];
   for (int i = 0; i < 6; i++) {
-    auto code = parse_number<int>(read_field_(data, &pos));
-    auto time = parse_number<int>(read_field_(data, &pos));
+    auto code = parse_number<int>(read_field(data, &pos));
+    auto time = parse_number<int>(read_field(data, &pos));
     if (!code.has_value() || !time.has_value()) {
       ESP_LOGE(TAG, "Parsing error history response failed: %s", data.c_str());
       return;
@@ -249,10 +249,10 @@ void Aesgi::on_battery_current_limit_data_(const std::string &data) {
   ESP_LOGI(TAG, "Battery current limit frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *29S 11.5 \xED\r
-  auto current_limit = parse_number<float>(read_field_(data, &pos));
+  auto current_limit = parse_number<float>(read_field(data, &pos));
 
   if (!current_limit.has_value()) {
     ESP_LOGE(TAG, "Parsing battery current limit response failed: %s", data.c_str());
@@ -267,11 +267,11 @@ void Aesgi::on_operation_mode_data_(const std::string &data) {
   ESP_LOGI(TAG, "Operation mode frame received (%zu bytes)", data.size());
 
   size_t pos = 1;
-  skip_field_(data, &pos);  // address+command
+  skip_field(data, &pos);  // address+command
 
   // *29B 0 20.0 '\r
-  auto operation_mode = parse_number<int>(read_field_(data, &pos));
-  auto voltage_limit = parse_number<float>(read_field_(data, &pos));
+  auto operation_mode = parse_number<int>(read_field(data, &pos));
+  auto voltage_limit = parse_number<float>(read_field(data, &pos));
 
   if (!operation_mode.has_value() || !voltage_limit.has_value()) {
     ESP_LOGE(TAG, "Parsing operation mode response failed: %s", data.c_str());
