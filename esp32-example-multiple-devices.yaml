@@ -1,7 +1,7 @@
 substitutions:
   name: aesgi-multiple-devices
-  device0: "${name} 1"
-  device1: "${name} 2"
+  device0: aesgi-1
+  device1: aesgi-2
   device_description: "Monitor and control two AE Conversion inverters via RS485"
   external_components_source: github://syssi/esphome-aesgi@main
   tx_pin: GPIO16
@@ -14,6 +14,11 @@ esphome:
   project:
     name: "syssi.esphome-aesgi"
     version: 1.0.0
+  devices:
+    - id: device0
+      name: "${device0}"
+    - id: device1
+      name: "${device1}"
 
 esp32:
   board: wemos_d1_mini32
@@ -68,211 +73,299 @@ binary_sensor:
   - platform: aesgi
     aesgi_id: inverter0
     online_status:
-      name: "${device0} online status"
+      name: "online status"
+      device_id: device0
   - platform: aesgi
     aesgi_id: inverter1
     online_status:
-      name: "${device1} online status"
+      name: "online status"
+      device_id: device1
 
 button:
   - platform: aesgi
     aesgi_id: inverter0
     auto_test:
-      name: "${device0} auto test"
+      name: "auto test"
+      device_id: device0
     # The operation mode battery can be enabled by setting the battery voltage limit
     operation_mode_pv:
-      name: "${device0} operation mode pv"
+      name: "operation mode pv"
+      device_id: device0
   - platform: aesgi
     aesgi_id: inverter1
     auto_test:
-      name: "${device1} auto test"
+      name: "auto test"
+      device_id: device1
     # The operation mode battery can be enabled by setting the battery voltage limit
     operation_mode_pv:
-      name: "${device1} operation mode pv"
+      name: "operation mode pv"
+      device_id: device1
 
 number:
   - platform: aesgi
     aesgi_id: inverter0
     output_power_throttle:
-      name: "${device0} output power throttle"
+      name: "output power throttle"
+      device_id: device0
     # output_power_throttle_broadcast:
-    #   name: "${device0} output power throttle broadcast"
+    #   name: "output power throttle broadcast"
+    #   device_id: device0
     battery_current_limit:
-      name: "${device0} battery current limit"
+      name: "battery current limit"
+      device_id: device0
     battery_voltage_limit:
-      name: "${device0} battery voltage limit"
+      name: "battery voltage limit"
+      device_id: device0
   - platform: aesgi
     aesgi_id: inverter1
     output_power_throttle:
-      name: "${device1} output power throttle"
+      name: "output power throttle"
+      device_id: device1
     # output_power_throttle_broadcast:
-    #   name: "${device1} output power throttle broadcast"
+    #   name: "output power throttle broadcast"
+    #   device_id: device1
     battery_current_limit:
-      name: "${device1} battery current limit"
+      name: "battery current limit"
+      device_id: device1
     battery_voltage_limit:
-      name: "${device1} battery voltage limit"
+      name: "battery voltage limit"
+      device_id: device1
 
 sensor:
   - platform: aesgi
     aesgi_id: inverter0
     status:
-      name: "${device0} status"
+      name: "status"
+      device_id: device0
     dc_voltage:
-      name: "${device0} DC voltage"
+      name: "DC voltage"
+      device_id: device0
     dc_current:
-      name: "${device0} DC current"
+      name: "DC current"
+      device_id: device0
     dc_power:
-      name: "${device0} DC power"
+      name: "DC power"
+      device_id: device0
     ac_voltage:
-      name: "${device0} AC voltage"
+      name: "AC voltage"
+      device_id: device0
     ac_current:
-      name: "${device0} AC current"
+      name: "AC current"
+      device_id: device0
     ac_power:
-      name: "${device0} AC power"
+      name: "AC power"
+      device_id: device0
     device_temperature:
-      name: "${device0} device temperature"
+      name: "device temperature"
+      device_id: device0
     energy_today:
-      name: "${device0} energy today"
+      name: "energy today"
+      device_id: device0
     output_power_throttle:
-      name: "${device0} output power throttle"
+      name: "output power throttle"
+      device_id: device0
     battery_current_limit:
-      name: "${device0} battery current limit"
+      name: "battery current limit"
+      device_id: device0
     battery_voltage_limit:
-      name: "${device0} battery voltage limit"
+      name: "battery voltage limit"
+      device_id: device0
     uptime:
-      name: "${device0} uptime"
+      name: "uptime"
+      device_id: device0
     ac_voltage_nominal:
-      name: "${device0} AC voltage nominal"
+      name: "AC voltage nominal"
+      device_id: device0
     ac_frequency_nominal:
-      name: "${device0} AC frequency nominal"
+      name: "AC frequency nominal"
+      device_id: device0
     ac_voltage_upper_limit:
-      name: "${device0} AC voltage upper limit"
+      name: "AC voltage upper limit"
+      device_id: device0
     ac_voltage_upper_limit_delay:
-      name: "${device0} AC voltage upper limit delay"
+      name: "AC voltage upper limit delay"
+      device_id: device0
     ac_voltage_lower_limit:
-      name: "${device0} AC voltage lower limit"
+      name: "AC voltage lower limit"
+      device_id: device0
     ac_voltage_lower_limit_delay:
-      name: "${device0} AC voltage lower limit delay"
+      name: "AC voltage lower limit delay"
+      device_id: device0
     ac_frequency_upper_limit:
-      name: "${device0} AC frequency upper limit"
+      name: "AC frequency upper limit"
+      device_id: device0
     ac_frequency_upper_limit_delay:
-      name: "${device0} AC frequency upper limit delay"
+      name: "AC frequency upper limit delay"
+      device_id: device0
     ac_frequency_lower_limit:
-      name: "${device0} AC frequency lower limit"
+      name: "AC frequency lower limit"
+      device_id: device0
 
     error_history_slot1_error_code:
-      name: "${device0} error history slot1 error code"
+      name: "error history slot1 error code"
+      device_id: device0
     error_history_slot1_error_time:
-      name: "${device0} error history slot1 error time"
+      name: "error history slot1 error time"
+      device_id: device0
     error_history_slot2_error_code:
-      name: "${device0} error history slot2 error code"
+      name: "error history slot2 error code"
+      device_id: device0
     error_history_slot2_error_time:
-      name: "${device0} error history slot2 error time"
+      name: "error history slot2 error time"
+      device_id: device0
     error_history_slot3_error_code:
-      name: "${device0} error history slot3 error code"
+      name: "error history slot3 error code"
+      device_id: device0
     error_history_slot3_error_time:
-      name: "${device0} error history slot3 error time"
+      name: "error history slot3 error time"
+      device_id: device0
     error_history_slot4_error_code:
-      name: "${device0} error history slot4 error code"
+      name: "error history slot4 error code"
+      device_id: device0
     error_history_slot4_error_time:
-      name: "${device0} error history slot4 error time"
+      name: "error history slot4 error time"
+      device_id: device0
     error_history_slot5_error_code:
-      name: "${device0} error history slot5 error code"
+      name: "error history slot5 error code"
+      device_id: device0
     error_history_slot5_error_time:
-      name: "${device0} error history slot5 error time"
+      name: "error history slot5 error time"
+      device_id: device0
     # This is the most recent error
     error_history_slot6_error_code:
-      name: "${device0} error history slot6 error code"
+      name: "error history slot6 error code"
+      device_id: device0
     error_history_slot6_error_time:
-      name: "${device0} error history slot6 error time"
+      name: "error history slot6 error time"
+      device_id: device0
 
   - platform: aesgi
     aesgi_id: inverter1
     status:
-      name: "${device1} status"
+      name: "status"
+      device_id: device1
     dc_voltage:
-      name: "${device1} DC voltage"
+      name: "DC voltage"
+      device_id: device1
     dc_current:
-      name: "${device1} DC current"
+      name: "DC current"
+      device_id: device1
     dc_power:
-      name: "${device1} DC power"
+      name: "DC power"
+      device_id: device1
     ac_voltage:
-      name: "${device1} AC voltage"
+      name: "AC voltage"
+      device_id: device1
     ac_current:
-      name: "${device1} AC current"
+      name: "AC current"
+      device_id: device1
     ac_power:
-      name: "${device1} AC power"
+      name: "AC power"
+      device_id: device1
     device_temperature:
-      name: "${device1} device temperature"
+      name: "device temperature"
+      device_id: device1
     energy_today:
-      name: "${device1} energy today"
+      name: "energy today"
+      device_id: device1
     output_power_throttle:
-      name: "${device1} output power throttle"
+      name: "output power throttle"
+      device_id: device1
     battery_current_limit:
-      name: "${device1} battery current limit"
+      name: "battery current limit"
+      device_id: device1
     battery_voltage_limit:
-      name: "${device1} battery voltage limit"
+      name: "battery voltage limit"
+      device_id: device1
     uptime:
-      name: "${device1} uptime"
+      name: "uptime"
+      device_id: device1
     ac_voltage_nominal:
-      name: "${device1} AC voltage nominal"
+      name: "AC voltage nominal"
+      device_id: device1
     ac_frequency_nominal:
-      name: "${device1} AC frequency nominal"
+      name: "AC frequency nominal"
+      device_id: device1
     ac_voltage_upper_limit:
-      name: "${device1} AC voltage upper limit"
+      name: "AC voltage upper limit"
+      device_id: device1
     ac_voltage_upper_limit_delay:
-      name: "${device1} AC voltage upper limit delay"
+      name: "AC voltage upper limit delay"
+      device_id: device1
     ac_voltage_lower_limit:
-      name: "${device1} AC voltage lower limit"
+      name: "AC voltage lower limit"
+      device_id: device1
     ac_voltage_lower_limit_delay:
-      name: "${device1} AC voltage lower limit delay"
+      name: "AC voltage lower limit delay"
+      device_id: device1
     ac_frequency_upper_limit:
-      name: "${device1} AC frequency upper limit"
+      name: "AC frequency upper limit"
+      device_id: device1
     ac_frequency_upper_limit_delay:
-      name: "${device1} AC frequency upper limit delay"
+      name: "AC frequency upper limit delay"
+      device_id: device1
     ac_frequency_lower_limit:
-      name: "${device1} AC frequency lower limit"
+      name: "AC frequency lower limit"
+      device_id: device1
 
     error_history_slot1_error_code:
-      name: "${device1} error history slot1 error code"
+      name: "error history slot1 error code"
+      device_id: device1
     error_history_slot1_error_time:
-      name: "${device1} error history slot1 error time"
+      name: "error history slot1 error time"
+      device_id: device1
     error_history_slot2_error_code:
-      name: "${device1} error history slot2 error code"
+      name: "error history slot2 error code"
+      device_id: device1
     error_history_slot2_error_time:
-      name: "${device1} error history slot2 error time"
+      name: "error history slot2 error time"
+      device_id: device1
     error_history_slot3_error_code:
-      name: "${device1} error history slot3 error code"
+      name: "error history slot3 error code"
+      device_id: device1
     error_history_slot3_error_time:
-      name: "${device1} error history slot3 error time"
+      name: "error history slot3 error time"
+      device_id: device1
     error_history_slot4_error_code:
-      name: "${device1} error history slot4 error code"
+      name: "error history slot4 error code"
+      device_id: device1
     error_history_slot4_error_time:
-      name: "${device1} error history slot4 error time"
+      name: "error history slot4 error time"
+      device_id: device1
     error_history_slot5_error_code:
-      name: "${device1} error history slot5 error code"
+      name: "error history slot5 error code"
+      device_id: device1
     error_history_slot5_error_time:
-      name: "${device1} error history slot5 error time"
+      name: "error history slot5 error time"
+      device_id: device1
     # This is the most recent error
     error_history_slot6_error_code:
-      name: "${device1} error history slot6 error code"
+      name: "error history slot6 error code"
+      device_id: device1
     error_history_slot6_error_time:
-      name: "${device1} error history slot6 error time"
+      name: "error history slot6 error time"
+      device_id: device1
 
 text_sensor:
   - platform: aesgi
     aesgi_id: inverter0
     operation_mode:
-      name: "${device0} operation mode"
+      name: "operation mode"
+      device_id: device0
     errors:
-      name: "${device0} errors"
+      name: "errors"
+      device_id: device0
     device_type:
-      name: "${device0} device type"
+      name: "device type"
+      device_id: device0
   - platform: aesgi
     aesgi_id: inverter1
     operation_mode:
-      name: "${device1} operation mode"
+      name: "operation mode"
+      device_id: device1
     errors:
-      name: "${device1} errors"
+      name: "errors"
+      device_id: device1
     device_type:
-      name: "${device1} device type"
+      name: "device type"
+      device_id: device1
