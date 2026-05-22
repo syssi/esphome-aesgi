@@ -1,7 +1,8 @@
+from esphome import pins
 import esphome.codegen as cg
 from esphome.components import uart
 import esphome.config_validation as cv
-from esphome.const import CONF_ADDRESS, CONF_ID
+from esphome.const import CONF_ADDRESS, CONF_FLOW_CONTROL_PIN, CONF_ID
 
 DEPENDENCIES = ["uart"]
 CODEOWNERS = ["@syssi"]
@@ -22,6 +23,7 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(
                 CONF_RX_TIMEOUT, default="50ms"
             ): cv.positive_time_period_milliseconds,
+            cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -37,6 +39,10 @@ async def to_code(config):
     await uart.register_uart_device(var, config)
 
     cg.add(var.set_rx_timeout(config[CONF_RX_TIMEOUT]))
+
+    if CONF_FLOW_CONTROL_PIN in config:
+        pin = await cg.gpio_pin_expression(config[CONF_FLOW_CONTROL_PIN])
+        cg.add(var.set_flow_control_pin(pin))
 
 
 def aesgi_rs485_device_schema(default_address):

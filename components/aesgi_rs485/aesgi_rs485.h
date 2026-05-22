@@ -1,6 +1,7 @@
 #pragma once
 
 #include "esphome/core/component.h"
+#include "esphome/core/gpio.h"
 #include "esphome/components/uart/uart.h"
 
 namespace esphome::aesgi_rs485 {
@@ -11,6 +12,7 @@ class AesgiRs485 : public uart::UARTDevice, public Component {
  public:
   AesgiRs485() = default;
 
+  void setup() override;
   void loop() override;
 
   void dump_config() override;
@@ -22,6 +24,7 @@ class AesgiRs485 : public uart::UARTDevice, public Component {
   void send(uint8_t address, uint8_t command, const std::string &value = "");
   void send_broadcast(uint8_t command, const std::string &value = "");
   void set_rx_timeout(uint16_t rx_timeout) { rx_timeout_ = rx_timeout; }
+  void set_flow_control_pin(GPIOPin *flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
 
  protected:
   bool parse_aesgi_rs485_byte_(uint8_t byte);
@@ -34,6 +37,7 @@ class AesgiRs485 : public uart::UARTDevice, public Component {
     return computed_crc == remote_crc;
   }
 
+  GPIOPin *flow_control_pin_{nullptr};
   std::vector<uint8_t> rx_buffer_;
   uint16_t rx_timeout_{50};
   uint32_t last_aesgi_rs485_byte_{0};
