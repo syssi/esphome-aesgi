@@ -227,16 +227,16 @@ void Aesgi::on_battery_current_limit_data_(const std::string &data) {
 
   ESP_LOGI(TAG, "Battery current limit frame received (%zu bytes)", data.size());
 
-  int current_limit;
+  float current_limit;
 
   // *29S 11.5 \xED\r
-  if (sscanf(data.c_str(), "*%*s %d", &current_limit) != 1) {  // NOLINT
+  if (sscanf(data.c_str(), "*%*s %f", &current_limit) != 1) {  // NOLINT
     ESP_LOGE(TAG, "Parsing battery current limit response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->battery_current_limit_sensor_, (float) current_limit);
-  this->publish_state_(this->battery_current_limit_number_, (float) current_limit);
+  this->publish_state_(this->battery_current_limit_sensor_, current_limit);
+  this->publish_state_(this->battery_current_limit_number_, current_limit);
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
