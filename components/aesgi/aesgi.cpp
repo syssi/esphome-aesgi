@@ -17,8 +17,7 @@ static const uint8_t AESGI_COMMAND_ERROR_HISTORY = 'F';
 static const uint8_t AESGI_COMMAND_BATTERY_CURRENT_LIMIT = 'S';
 static const uint8_t AESGI_COMMAND_OPERATION_MODE = 'B';
 
-static const uint8_t AESGI_COMMAND_QUEUE_SIZE = 7;
-static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
+static const uint8_t AESGI_COMMAND_QUEUE[Aesgi::COMMAND_QUEUE_SIZE] = {
     AESGI_COMMAND_STATUS,
     AESGI_COMMAND_DEVICE_TYPE,
     AESGI_COMMAND_OUTPUT_POWER_THROTTLE,
@@ -79,8 +78,8 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
   }
 
   // Send next command after each received frame
-  if (this->next_command_ < AESGI_COMMAND_QUEUE_SIZE) {
-    this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % AESGI_COMMAND_QUEUE_SIZE]);
+  if (this->next_command_ < COMMAND_QUEUE_SIZE) {
+    this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % COMMAND_QUEUE_SIZE]);
   }
 }
 
@@ -289,15 +288,15 @@ void Aesgi::update() {
   this->track_online_status_();
 
   // Loop through all commands if connected
-  if (this->next_command_ != AESGI_COMMAND_QUEUE_SIZE && this->no_response_count_ < MAX_NO_RESPONSE_COUNT) {
+  if (this->next_command_ != COMMAND_QUEUE_SIZE && this->no_response_count_ < MAX_NO_RESPONSE_COUNT) {
     ESP_LOGW(TAG,
              "Command queue (%d of %d) was not completely processed. "
              "Please increase the update_interval if you see this warning frequently",
-             this->next_command_ + 1, AESGI_COMMAND_QUEUE_SIZE);
+             this->next_command_ + 1, COMMAND_QUEUE_SIZE);
   }
   this->next_command_ = 0;
 
-  this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % AESGI_COMMAND_QUEUE_SIZE]);
+  this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % COMMAND_QUEUE_SIZE]);
 }
 
 void Aesgi::track_online_status_() {
