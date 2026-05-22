@@ -57,11 +57,11 @@ aesgi_rs485:
 aesgi:
   - id: inverter0
     aesgi_rs485_id: bus0
-    address: 1
+    address: 29
     update_interval: 5s
   - id: inverter1
     aesgi_rs485_id: bus0
-    address: 2
+    address: 30
     update_interval: 5s
 
 binary_sensor:
