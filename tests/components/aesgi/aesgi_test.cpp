@@ -92,6 +92,29 @@ TEST_F(AesgiStatusTest, NullSensorSafe) {
   EXPECT_NO_FATAL_FAILURE(bare.on_status_data_(STATUS_RESPONSE));
 }
 
+class AesgiAutoTestTest : public ::testing::Test {
+ protected:
+  TestableAesgi aesgi_;
+  sensor::Sensor auto_test_result_;
+
+  void SetUp() override { aesgi_.set_auto_test_result_sensor(&auto_test_result_); }
+};
+
+TEST_F(AesgiAutoTestTest, ResultZero) {
+  aesgi_.on_auto_test_data_(AUTO_TEST_RESPONSE);
+  EXPECT_FLOAT_EQ(auto_test_result_.state, 0.0f);
+}
+
+TEST_F(AesgiAutoTestTest, ResultNonZero) {
+  aesgi_.on_auto_test_data_(AUTO_TEST_RESPONSE_NONZERO);
+  EXPECT_FLOAT_EQ(auto_test_result_.state, 42.0f);
+}
+
+TEST_F(AesgiAutoTestTest, NullSensorSafe) {
+  TestableAesgi bare;
+  EXPECT_NO_FATAL_FAILURE(bare.on_auto_test_data_(AUTO_TEST_RESPONSE));
+}
+
 class AesgiDeviceTypeTest : public ::testing::Test {
  protected:
   TestableAesgi aesgi_;
