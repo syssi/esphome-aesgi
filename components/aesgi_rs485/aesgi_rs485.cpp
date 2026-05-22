@@ -7,6 +7,13 @@ namespace esphome::aesgi_rs485 {
 
 static const char *const TAG = "aesgi_rs485";
 
+void AesgiRs485::setup() {
+  if (this->flow_control_pin_ != nullptr) {
+    this->flow_control_pin_->setup();
+    this->flow_control_pin_->digital_write(false);
+  }
+}
+
 void AesgiRs485::loop() {
   const uint32_t now = millis();
   if (now - this->last_aesgi_rs485_byte_ > this->rx_timeout_) {
@@ -97,6 +104,7 @@ bool AesgiRs485::parse_aesgi_rs485_byte_(uint8_t byte) {
 void AesgiRs485::dump_config() {
   ESP_LOGCONFIG(TAG, "AesgiRs485:");
   ESP_LOGCONFIG(TAG, "  RX timeout: %d ms", this->rx_timeout_);
+  LOG_PIN("  Flow Control Pin: ", this->flow_control_pin_);
 }
 float AesgiRs485::get_setup_priority() const {
   // After UART bus
@@ -126,8 +134,12 @@ void AesgiRs485::send(uint8_t address, uint8_t command, const std::string &value
 
   frame[frame_len - 1] = '\r';
 
+  if (this->flow_control_pin_ != nullptr)
+    this->flow_control_pin_->digital_write(true);
   this->write_array(frame.data(), frame_len);
   this->flush();
+  if (this->flow_control_pin_ != nullptr)
+    this->flow_control_pin_->digital_write(false);
 }
 
 void AesgiRs485::send_broadcast(uint8_t command, const std::string &value) {
@@ -149,8 +161,12 @@ void AesgiRs485::send_broadcast(uint8_t command, const std::string &value) {
 
   frame[frame_len - 1] = '\r';
 
+  if (this->flow_control_pin_ != nullptr)
+    this->flow_control_pin_->digital_write(true);
   this->write_array(frame.data(), frame_len);
   this->flush();
+  if (this->flow_control_pin_ != nullptr)
+    this->flow_control_pin_->digital_write(false);
 }
 
 }  // namespace esphome::aesgi_rs485

@@ -56,6 +56,7 @@ aesgi_rs485:
   - id: bus0
     uart_id: uart_0
     rx_timeout: 250ms
+    # flow_control_pin: GPIO12
 
 aesgi:
   - id: inverter0
