@@ -28,6 +28,22 @@ static const uint8_t AESGI_COMMAND_QUEUE[AESGI_COMMAND_QUEUE_SIZE] = {
     AESGI_COMMAND_OPERATION_MODE,
 };
 
+static std::string read_field(const std::string &data, size_t *pos) {
+  while (*pos < data.size() && data[*pos] == ' ')
+    (*pos)++;
+  const size_t begin = *pos;
+  while (*pos < data.size() && data[*pos] != ' ')
+    (*pos)++;
+  return data.substr(begin, *pos - begin);
+}
+
+static void skip_field(const std::string &data, size_t *pos) {
+  while (*pos < data.size() && data[*pos] == ' ')
+    (*pos)++;
+  while (*pos < data.size() && data[*pos] != ' ')
+    (*pos)++;
+}
+
 void Aesgi::on_aesgi_rs485_data(const std::string &data) {
   this->reset_online_status_tracker_();
 
@@ -69,76 +85,68 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
 }
 
 void Aesgi::on_auto_test_data_(const std::string &data) {
-  if (data.size() < 68 - 1) {
-    ESP_LOGW(TAG, "Auto test frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Auto test frame received (%zu bytes)", data.size());
 
-  int result;
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
+  for (int i = 0; i < 10; i++)
+    skip_field(data, &pos);
+  auto result = parse_number<int>(read_field(data, &pos));
 
-  // *29A 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 00000 \xD4\r
-  if (sscanf(data.c_str(), "*%*s %*f %*f %*f %*f %*f %*f %*d %*d %*d %*d %d", &result) != 1) {  // NOLINT
+  if (!result.has_value()) {
     ESP_LOGE(TAG, "Parsing auto test response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->auto_test_result_sensor_, (float) result);
+  this->publish_state_(this->auto_test_result_sensor_, result.value());
 }
 
 void Aesgi::on_status_data_(const std::string &data) {
-  if (data.size() < 58 - 1) {
-    ESP_LOGW(TAG, "Status frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Status frame received (%zu bytes)", data.size());
 
-  int status;
-  float dc_voltage;
-  float dc_current;
-  int dc_power;
-  float ac_voltage;
-  float ac_current;
-  int ac_power;
-  int device_temperature;
-  int energy_today;
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
   // *290   0  20.0  0.00     0 235.1  0.01     1  50     44 \xD9\r
-  int ret = sscanf(data.c_str(), "*%*s %d %f %f %d %f %f %d %d %d", &status, &dc_voltage, &dc_current,  // NOLINT
-                   &dc_power, &ac_voltage, &ac_current, &ac_power, &device_temperature, &energy_today);
+  auto status = parse_number<int>(read_field(data, &pos));
+  auto dc_voltage = parse_number<float>(read_field(data, &pos));
+  auto dc_current = parse_number<float>(read_field(data, &pos));
+  auto dc_power = parse_number<int>(read_field(data, &pos));
+  auto ac_voltage = parse_number<float>(read_field(data, &pos));
+  auto ac_current = parse_number<float>(read_field(data, &pos));
+  auto ac_power = parse_number<int>(read_field(data, &pos));
+  auto device_temperature = parse_number<int>(read_field(data, &pos));
+  auto energy_today = parse_number<int>(read_field(data, &pos));
 
-  if (ret != 9) {
+  if (!status.has_value() || !dc_voltage.has_value() || !dc_current.has_value() || !dc_power.has_value() ||
+      !ac_voltage.has_value() || !ac_current.has_value() || !ac_power.has_value() || !device_temperature.has_value() ||
+      !energy_today.has_value()) {
     ESP_LOGE(TAG, "Parsing status response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->status_sensor_, status);
+  this->publish_state_(this->status_sensor_, status.value());
   this->publish_state_(this->errors_text_sensor_, "");
-
-  this->publish_state_(this->dc_voltage_sensor_, dc_voltage);
-  this->publish_state_(this->dc_current_sensor_, dc_current);
-  this->publish_state_(this->dc_power_sensor_, dc_power);
-  this->publish_state_(this->ac_voltage_sensor_, ac_voltage);
-  this->publish_state_(this->ac_current_sensor_, ac_current);
-  this->publish_state_(this->ac_power_sensor_, ac_power);
-  this->publish_state_(this->device_temperature_sensor_, device_temperature);
-  this->publish_state_(this->energy_today_sensor_, energy_today);
+  this->publish_state_(this->dc_voltage_sensor_, dc_voltage.value());
+  this->publish_state_(this->dc_current_sensor_, dc_current.value());
+  this->publish_state_(this->dc_power_sensor_, dc_power.value());
+  this->publish_state_(this->ac_voltage_sensor_, ac_voltage.value());
+  this->publish_state_(this->ac_current_sensor_, ac_current.value());
+  this->publish_state_(this->ac_power_sensor_, ac_power.value());
+  this->publish_state_(this->device_temperature_sensor_, device_temperature.value());
+  this->publish_state_(this->energy_today_sensor_, energy_today.value());
 }
 
 void Aesgi::on_device_type_data_(const std::string &data) {
-  if (data.size() < 14 - 1) {
-    ESP_LOGW(TAG, "Device type frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Device type frame received (%zu bytes)", data.size());
 
-  char device_type[7];
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
   // *299 PV350W \xA3\r
-  if (sscanf(data.c_str(), "*%*s %6s", device_type) != 1) {  // NOLINT
+  const std::string device_type = read_field(data, &pos);
+
+  if (device_type.empty()) {
     ESP_LOGE(TAG, "Parsing device type frame response failed: %s", data.c_str());
     return;
   }
@@ -147,91 +155,90 @@ void Aesgi::on_device_type_data_(const std::string &data) {
 }
 
 void Aesgi::on_output_power_throttle_data_(const std::string &data) {
-  if (data.size() < 11 - 1) {
-    ESP_LOGW(TAG, "Output power throttle frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Output power throttle frame received (%zu bytes)", data.size());
 
-  int output_power;
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
   // *29L 100 \xB2\r
-  if (sscanf(data.c_str(), "*%*s %d", &output_power) != 1) {  // NOLINT
+  auto output_power = parse_number<int>(read_field(data, &pos));
+
+  if (!output_power.has_value()) {
     ESP_LOGE(TAG, "Parsing output power throttle response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->output_power_throttle_sensor_, (float) output_power);
-  this->publish_state_(this->output_power_throttle_number_, (float) output_power);
-  this->publish_state_(this->output_power_throttle_broadcast_number_, (float) output_power);
+  this->publish_state_(this->output_power_throttle_sensor_, output_power.value());
+  this->publish_state_(this->output_power_throttle_number_, output_power.value());
+  this->publish_state_(this->output_power_throttle_broadcast_number_, output_power.value());
 }
 
 void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
-  if (data.size() < 62 - 1) {
-    ESP_LOGW(TAG, "Grid disconnect parameters frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Grid disconnect parameters frame received (%zu bytes)", data.size());
 
-  float ac_voltage_nominal;
-  float ac_frequency_nominal;
-  float ac_voltage_upper_limit;
-  float ac_voltage_upper_limit_delay;
-  float ac_voltage_lower_limit;
-  float ac_voltage_lower_limit_delay;
-  int ac_frequency_upper_limit;
-  int ac_frequency_upper_limit_delay;
-  int ac_frequency_lower_limit;
-  int ac_frequency_lower_limit_delay;
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
   // *29P 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 \x15\r
-  int ret = sscanf(data.c_str(), "*%*s %f %f %f %f %f %f %d %d %d %d", &ac_voltage_nominal,  // NOLINT
-                   &ac_frequency_nominal, &ac_voltage_upper_limit, &ac_voltage_upper_limit_delay,
-                   &ac_voltage_lower_limit, &ac_voltage_lower_limit_delay, &ac_frequency_upper_limit,
-                   &ac_frequency_upper_limit_delay, &ac_frequency_lower_limit, &ac_frequency_lower_limit_delay);
+  auto ac_voltage_nominal = parse_number<float>(read_field(data, &pos));
+  auto ac_frequency_nominal = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_upper_limit = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_upper_limit_delay = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_lower_limit = parse_number<float>(read_field(data, &pos));
+  auto ac_voltage_lower_limit_delay = parse_number<float>(read_field(data, &pos));
+  auto ac_frequency_upper_limit = parse_number<int>(read_field(data, &pos));
+  auto ac_frequency_upper_limit_delay = parse_number<int>(read_field(data, &pos));
+  auto ac_frequency_lower_limit = parse_number<int>(read_field(data, &pos));
+  auto ac_frequency_lower_limit_delay = parse_number<int>(read_field(data, &pos));
 
-  if (ret != 10) {
+  if (!ac_voltage_nominal.has_value() || !ac_frequency_nominal.has_value() || !ac_voltage_upper_limit.has_value() ||
+      !ac_voltage_upper_limit_delay.has_value() || !ac_voltage_lower_limit.has_value() ||
+      !ac_voltage_lower_limit_delay.has_value() || !ac_frequency_upper_limit.has_value() ||
+      !ac_frequency_upper_limit_delay.has_value() || !ac_frequency_lower_limit.has_value() ||
+      !ac_frequency_lower_limit_delay.has_value()) {
     ESP_LOGE(TAG, "Parsing grid disconnect parameters response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->ac_voltage_nominal_sensor_, ac_voltage_nominal);
-  this->publish_state_(this->ac_frequency_nominal_sensor_, ac_frequency_nominal);
-  this->publish_state_(this->ac_voltage_upper_limit_sensor_, ac_voltage_upper_limit);
-  this->publish_state_(this->ac_voltage_upper_limit_delay_sensor_, ac_voltage_upper_limit_delay);
-  this->publish_state_(this->ac_voltage_lower_limit_sensor_, ac_voltage_lower_limit);
-  this->publish_state_(this->ac_voltage_lower_limit_delay_sensor_, ac_voltage_lower_limit_delay);
-  this->publish_state_(this->ac_frequency_upper_limit_sensor_, count_to_hertz_(ac_frequency_upper_limit));
-  this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, ac_frequency_upper_limit_delay);
-  this->publish_state_(this->ac_frequency_lower_limit_sensor_, count_to_hertz_(ac_frequency_lower_limit));
-  this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, ac_frequency_lower_limit_delay);
+  this->publish_state_(this->ac_voltage_nominal_sensor_, ac_voltage_nominal.value());
+  this->publish_state_(this->ac_frequency_nominal_sensor_, ac_frequency_nominal.value());
+  this->publish_state_(this->ac_voltage_upper_limit_sensor_, ac_voltage_upper_limit.value());
+  this->publish_state_(this->ac_voltage_upper_limit_delay_sensor_, ac_voltage_upper_limit_delay.value());
+  this->publish_state_(this->ac_voltage_lower_limit_sensor_, ac_voltage_lower_limit.value());
+  this->publish_state_(this->ac_voltage_lower_limit_delay_sensor_, ac_voltage_lower_limit_delay.value());
+  this->publish_state_(this->ac_frequency_upper_limit_sensor_, count_to_hertz_(ac_frequency_upper_limit.value()));
+  this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, ac_frequency_upper_limit_delay.value());
+  this->publish_state_(this->ac_frequency_lower_limit_sensor_, count_to_hertz_(ac_frequency_lower_limit.value()));
+  this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, ac_frequency_lower_limit_delay.value());
 }
 
 void Aesgi::on_error_history_data_(const std::string &data) {
-  if (data.size() < 73 - 1) {
-    ESP_LOGW(TAG, "Error history frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Error history frame received (%zu bytes)", data.size());
 
-  int uptime;
-  int error_codes[6];
-  int error_times[6];
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
   // *29F 07625 007 00000 006 00000 007 00001 025 00001 025 00002 025 00003 \xCF\r
-  int ret = sscanf(data.c_str(), "*%*s %d %d %d %d %d %d %d %d %d %d %d %d %d", &uptime, &error_codes[0],  // NOLINT
-                   &error_times[0], &error_codes[1], &error_times[1], &error_codes[2], &error_times[2], &error_codes[3],
-                   &error_times[3], &error_codes[4], &error_times[4], &error_codes[5], &error_times[5]);
-
-  if (ret != 13) {
+  auto uptime = parse_number<int>(read_field(data, &pos));
+  if (!uptime.has_value()) {
     ESP_LOGE(TAG, "Parsing error history response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->uptime_sensor_, uptime);
+  int error_codes[6];
+  int error_times[6];
+  for (int i = 0; i < 6; i++) {
+    auto code = parse_number<int>(read_field(data, &pos));
+    auto time = parse_number<int>(read_field(data, &pos));
+    if (!code.has_value() || !time.has_value()) {
+      ESP_LOGE(TAG, "Parsing error history response failed: %s", data.c_str());
+      return;
+    }
+    error_codes[i] = code.value();
+    error_times[i] = time.value();
+  }
+
+  this->publish_state_(this->uptime_sensor_, uptime.value());
   for (int i = 0; i < 6; i++) {
     this->publish_state_(this->error_history_[i].error_code_sensor_, error_codes[i]);
     this->publish_state_(this->error_history_[i].error_time_sensor_, error_times[i]);
@@ -239,47 +246,43 @@ void Aesgi::on_error_history_data_(const std::string &data) {
 }
 
 void Aesgi::on_battery_current_limit_data_(const std::string &data) {
-  if (data.size() < 12 - 1) {
-    ESP_LOGW(TAG, "Battery current limit frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Battery current limit frame received (%zu bytes)", data.size());
 
-  float current_limit;
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
   // *29S 11.5 \xED\r
-  if (sscanf(data.c_str(), "*%*s %f", &current_limit) != 1) {  // NOLINT
+  auto current_limit = parse_number<float>(read_field(data, &pos));
+
+  if (!current_limit.has_value()) {
     ESP_LOGE(TAG, "Parsing battery current limit response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->battery_current_limit_sensor_, current_limit);
-  this->publish_state_(this->battery_current_limit_number_, current_limit);
+  this->publish_state_(this->battery_current_limit_sensor_, current_limit.value());
+  this->publish_state_(this->battery_current_limit_number_, current_limit.value());
 }
 
 void Aesgi::on_operation_mode_data_(const std::string &data) {
-  if (data.size() < 14 - 1) {
-    ESP_LOGW(TAG, "Operation mode frame too short. Skipping");
-    return;
-  }
-
   ESP_LOGI(TAG, "Operation mode frame received (%zu bytes)", data.size());
 
-  int operation_mode;
-  float voltage_limit;
+  size_t pos = 1;
+  skip_field(data, &pos);  // address+command
 
-  // *29B 0 20.0 \'\r
-  if (sscanf(data.c_str(), "*%*s %d %f", &operation_mode, &voltage_limit) != 2) {  // NOLINT
+  // *29B 0 20.0 '\r
+  auto operation_mode = parse_number<int>(read_field(data, &pos));
+  auto voltage_limit = parse_number<float>(read_field(data, &pos));
+
+  if (!operation_mode.has_value() || !voltage_limit.has_value()) {
     ESP_LOGE(TAG, "Parsing operation mode response failed: %s", data.c_str());
     return;
   }
 
-  this->publish_state_(this->operation_mode_text_sensor_, operation_mode == 0   ? "MPPT"
-                                                          : operation_mode == 2 ? "Battery"
-                                                                                : "Unknown");
-  this->publish_state_(this->battery_voltage_limit_sensor_, voltage_limit);
-  this->publish_state_(this->battery_voltage_limit_number_, voltage_limit);
+  this->publish_state_(this->operation_mode_text_sensor_, operation_mode.value() == 0   ? "MPPT"
+                                                          : operation_mode.value() == 2 ? "Battery"
+                                                                                        : "Unknown");
+  this->publish_state_(this->battery_voltage_limit_sensor_, voltage_limit.value());
+  this->publish_state_(this->battery_voltage_limit_number_, voltage_limit.value());
 }
 
 void Aesgi::update() {

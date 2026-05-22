@@ -15,7 +15,6 @@ esphome:
 
 esp8266:
   board: d1_mini
-  enable_scanf_float: true
 
 external_components:
   - source: ${external_components_source}
