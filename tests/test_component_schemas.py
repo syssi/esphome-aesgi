@@ -28,7 +28,8 @@ class TestSensorDefs:
         assert sensor.CONF_AC_VOLTAGE in sensor.SENSOR_DEFS
         assert sensor.CONF_AC_CURRENT in sensor.SENSOR_DEFS
         assert sensor.CONF_DEVICE_TEMPERATURE in sensor.SENSOR_DEFS
-        assert len(sensor.SENSOR_DEFS) == 23
+        assert sensor.CONF_AUTO_TEST_RESULT in sensor.SENSOR_DEFS
+        assert len(sensor.SENSOR_DEFS) == 24
 
     def test_error_history_error_codes_count(self):
         assert len(sensor.ERROR_HISTORY_ERROR_CODES) == 6
