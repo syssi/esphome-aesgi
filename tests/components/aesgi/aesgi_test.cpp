@@ -270,9 +270,8 @@ class AesgiBatteryCurrentLimitTest : public ::testing::Test {
 };
 
 TEST_F(AesgiBatteryCurrentLimitTest, BatteryCurrentLimit) {
-  // sscanf %d truncates 11.5 to 11
   aesgi_.on_battery_current_limit_data_(BATTERY_CURRENT_LIMIT_RESPONSE);
-  EXPECT_FLOAT_EQ(battery_current_limit_.state, 11.0f);
+  EXPECT_NEAR(battery_current_limit_.state, 11.5f, 0.05f);
 }
 
 TEST_F(AesgiBatteryCurrentLimitTest, NullSensorSafe) {
