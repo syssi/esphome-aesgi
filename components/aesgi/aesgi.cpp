@@ -98,7 +98,7 @@ void Aesgi::on_auto_test_data_(const std::string &data) {
     return;
   }
 
-  this->publish_state_(this->auto_test_result_sensor_, (float) result.value());
+  this->publish_state_(this->auto_test_result_sensor_, result.value());
 }
 
 void Aesgi::on_status_data_(const std::string &data) {
@@ -125,16 +125,16 @@ void Aesgi::on_status_data_(const std::string &data) {
     return;
   }
 
-  this->publish_state_(this->status_sensor_, (float) status.value());
+  this->publish_state_(this->status_sensor_, status.value());
   this->publish_state_(this->errors_text_sensor_, "");
   this->publish_state_(this->dc_voltage_sensor_, dc_voltage.value());
   this->publish_state_(this->dc_current_sensor_, dc_current.value());
-  this->publish_state_(this->dc_power_sensor_, (float) dc_power.value());
+  this->publish_state_(this->dc_power_sensor_, dc_power.value());
   this->publish_state_(this->ac_voltage_sensor_, ac_voltage.value());
   this->publish_state_(this->ac_current_sensor_, ac_current.value());
-  this->publish_state_(this->ac_power_sensor_, (float) ac_power.value());
-  this->publish_state_(this->device_temperature_sensor_, (float) device_temperature.value());
-  this->publish_state_(this->energy_today_sensor_, (float) energy_today.value());
+  this->publish_state_(this->ac_power_sensor_, ac_power.value());
+  this->publish_state_(this->device_temperature_sensor_, device_temperature.value());
+  this->publish_state_(this->energy_today_sensor_, energy_today.value());
 }
 
 void Aesgi::on_device_type_data_(const std::string &data) {
@@ -168,9 +168,9 @@ void Aesgi::on_output_power_throttle_data_(const std::string &data) {
     return;
   }
 
-  this->publish_state_(this->output_power_throttle_sensor_, (float) output_power.value());
-  this->publish_state_(this->output_power_throttle_number_, (float) output_power.value());
-  this->publish_state_(this->output_power_throttle_broadcast_number_, (float) output_power.value());
+  this->publish_state_(this->output_power_throttle_sensor_, output_power.value());
+  this->publish_state_(this->output_power_throttle_number_, output_power.value());
+  this->publish_state_(this->output_power_throttle_broadcast_number_, output_power.value());
 }
 
 void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
@@ -207,9 +207,9 @@ void Aesgi::on_grid_disconnect_parameters_data_(const std::string &data) {
   this->publish_state_(this->ac_voltage_lower_limit_sensor_, ac_voltage_lower_limit.value());
   this->publish_state_(this->ac_voltage_lower_limit_delay_sensor_, ac_voltage_lower_limit_delay.value());
   this->publish_state_(this->ac_frequency_upper_limit_sensor_, count_to_hertz_(ac_frequency_upper_limit.value()));
-  this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, (float) ac_frequency_upper_limit_delay.value());
+  this->publish_state_(this->ac_frequency_upper_limit_delay_sensor_, ac_frequency_upper_limit_delay.value());
   this->publish_state_(this->ac_frequency_lower_limit_sensor_, count_to_hertz_(ac_frequency_lower_limit.value()));
-  this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, (float) ac_frequency_lower_limit_delay.value());
+  this->publish_state_(this->ac_frequency_lower_limit_delay_sensor_, ac_frequency_lower_limit_delay.value());
 }
 
 void Aesgi::on_error_history_data_(const std::string &data) {
@@ -238,10 +238,10 @@ void Aesgi::on_error_history_data_(const std::string &data) {
     error_times[i] = time.value();
   }
 
-  this->publish_state_(this->uptime_sensor_, (float) uptime.value());
+  this->publish_state_(this->uptime_sensor_, uptime.value());
   for (int i = 0; i < 6; i++) {
-    this->publish_state_(this->error_history_[i].error_code_sensor_, (float) error_codes[i]);
-    this->publish_state_(this->error_history_[i].error_time_sensor_, (float) error_times[i]);
+    this->publish_state_(this->error_history_[i].error_code_sensor_, error_codes[i]);
+    this->publish_state_(this->error_history_[i].error_time_sensor_, error_times[i]);
   }
 }
 
