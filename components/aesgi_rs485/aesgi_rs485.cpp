@@ -66,7 +66,7 @@ bool AesgiRs485::parse_aesgi_rs485_byte_(uint8_t byte) {
   size_t frame_len = at + 1;
 
   if (frame_len < 5) {
-    ESP_LOGW(TAG, "Frame too short: %d", frame_len);
+    ESP_LOGW(TAG, "Frame too short: %zu", frame_len);
     return false;
   }
 
