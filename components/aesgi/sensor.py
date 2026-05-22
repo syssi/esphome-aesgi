@@ -42,6 +42,7 @@ CONF_AC_CURRENT = "ac_current"
 CONF_AC_POWER = "ac_power"
 CONF_DEVICE_TEMPERATURE = "device_temperature"
 CONF_ENERGY_TODAY = "energy_today"
+CONF_AUTO_TEST_RESULT = "auto_test_result"
 CONF_OUTPUT_POWER_THROTTLE = "output_power_throttle"
 CONF_BATTERY_CURRENT_LIMIT = "battery_current_limit"
 CONF_BATTERY_VOLTAGE_LIMIT = "battery_voltage_limit"
@@ -73,6 +74,14 @@ CONF_ERROR_HISTORY_SLOT6_ERROR_TIME = "error_history_slot6_error_time"
 
 # key: sensor_schema kwargs
 SENSOR_DEFS = {
+    CONF_AUTO_TEST_RESULT: {
+        "unit_of_measurement": UNIT_EMPTY,
+        "icon": "mdi:check-circle-outline",
+        "accuracy_decimals": 0,
+        "device_class": DEVICE_CLASS_EMPTY,
+        "state_class": STATE_CLASS_MEASUREMENT,
+        "entity_category": ENTITY_CATEGORY_DIAGNOSTIC,
+    },
     CONF_STATUS: {
         "unit_of_measurement": UNIT_EMPTY,
         "icon": "mdi:heart-pulse",

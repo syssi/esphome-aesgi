@@ -43,7 +43,7 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
       this->on_output_power_throttle_data_(data);
       break;
     case AESGI_COMMAND_AUTO_TEST:
-      ESP_LOGI(TAG, "Auto test response (%zu bytes) received: %s", data.size(), data.c_str());
+      this->on_auto_test_data_(data);
       break;
     case AESGI_COMMAND_GRID_DISCONNECT_PARAMETERS:
       this->on_grid_disconnect_parameters_data_(data);
@@ -66,6 +66,25 @@ void Aesgi::on_aesgi_rs485_data(const std::string &data) {
   if (this->next_command_ < AESGI_COMMAND_QUEUE_SIZE) {
     this->send(AESGI_COMMAND_QUEUE[this->next_command_++ % AESGI_COMMAND_QUEUE_SIZE]);
   }
+}
+
+void Aesgi::on_auto_test_data_(const std::string &data) {
+  if (data.size() < 68 - 1) {
+    ESP_LOGW(TAG, "Auto test frame too short. Skipping");
+    return;
+  }
+
+  ESP_LOGI(TAG, "Auto test frame received (%zu bytes)", data.size());
+
+  int result;
+
+  // *29A 230.0 50.0 264.5 0140 184.0 0140 31631 0160 29186 0160 00000 \xD4\r
+  if (sscanf(data.c_str(), "*%*s %*f %*f %*f %*f %*f %*f %*d %*d %*d %*d %d", &result) != 1) {  // NOLINT
+    ESP_LOGE(TAG, "Parsing auto test response failed: %s", data.c_str());
+    return;
+  }
+
+  this->publish_state_(this->auto_test_result_sensor_, (float) result);
 }
 
 void Aesgi::on_status_data_(const std::string &data) {
@@ -299,6 +318,7 @@ void Aesgi::publish_device_unavailable_() {
   this->publish_state_(this->operation_mode_text_sensor_, "Unknown");
   this->publish_state_(this->device_type_text_sensor_, "Unknown");
 
+  this->publish_state_(this->auto_test_result_sensor_, NAN);
   this->publish_state_(this->status_sensor_, NAN);
   this->publish_state_(this->dc_voltage_sensor_, NAN);
   this->publish_state_(this->dc_current_sensor_, NAN);
@@ -362,6 +382,7 @@ void Aesgi::dump_config() {  // NOLINT(google-readability-function-size,readabil
   ESP_LOGCONFIG(TAG, "  Address: 0x%02X", this->address_);
   LOG_BINARY_SENSOR("", "Online Status", this->online_status_binary_sensor_);
 
+  LOG_SENSOR("", "Auto test result", this->auto_test_result_sensor_);
   LOG_SENSOR("", "Status", this->status_sensor_);
   LOG_SENSOR("", "DC voltage", this->dc_voltage_sensor_);
   LOG_SENSOR("", "DC current", this->dc_current_sensor_);

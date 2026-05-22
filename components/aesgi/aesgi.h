@@ -48,6 +48,9 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   void set_battery_voltage_limit_sensor(sensor::Sensor *battery_voltage_limit_sensor) {
     battery_voltage_limit_sensor_ = battery_voltage_limit_sensor;
   }
+  void set_auto_test_result_sensor(sensor::Sensor *auto_test_result_sensor) {
+    auto_test_result_sensor_ = auto_test_result_sensor;
+  }
   void set_uptime_sensor(sensor::Sensor *uptime_sensor) { uptime_sensor_ = uptime_sensor; }
   void set_ac_voltage_nominal_sensor(sensor::Sensor *ac_voltage_nominal_sensor) {
     ac_voltage_nominal_sensor_ = ac_voltage_nominal_sensor;
@@ -108,6 +111,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   number::Number *battery_current_limit_number_{nullptr};
   number::Number *battery_voltage_limit_number_{nullptr};
 
+  sensor::Sensor *auto_test_result_sensor_{nullptr};
   sensor::Sensor *status_sensor_{nullptr};
   sensor::Sensor *dc_voltage_sensor_{nullptr};
   sensor::Sensor *dc_current_sensor_{nullptr};
@@ -144,6 +148,7 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   uint8_t no_response_count_{0};
   uint8_t next_command_{7};
 
+  void on_auto_test_data_(const std::string &data);
   void on_status_data_(const std::string &data);
   void on_device_type_data_(const std::string &data);
   void on_output_power_throttle_data_(const std::string &data);

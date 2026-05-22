@@ -95,6 +95,8 @@ number:
 sensor:
   - platform: aesgi
     aesgi_id: inverter0
+    auto_test_result:
+      name: "auto test result"
     status:
       name: "status"
     dc_voltage:
