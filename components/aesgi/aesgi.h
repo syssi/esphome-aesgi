@@ -103,6 +103,8 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
 
   void update() override;
 
+ static constexpr uint8_t COMMAND_QUEUE_SIZE = 7;
+
  protected:
   binary_sensor::BinarySensor *online_status_binary_sensor_{nullptr};
 
@@ -144,8 +146,6 @@ class Aesgi : public PollingComponent, public aesgi_rs485::AesgiRs485Device {
   text_sensor::TextSensor *operation_mode_text_sensor_{nullptr};
   text_sensor::TextSensor *errors_text_sensor_{nullptr};
   text_sensor::TextSensor *device_type_text_sensor_{nullptr};
-
-  static constexpr uint8_t COMMAND_QUEUE_SIZE = 7;
 
   uint8_t no_response_count_{0};
   uint8_t next_command_{COMMAND_QUEUE_SIZE};
