@@ -12,6 +12,7 @@ AUTO_LOAD = [
     "text_sensor",
 ]
 CODEOWNERS = ["@syssi"]
+DOMAIN = "aesgi"
 MULTI_CONF = True
 
 CONF_AESGI_ID = "aesgi_id"
