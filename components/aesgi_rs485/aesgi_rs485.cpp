@@ -3,9 +3,14 @@
 #include "esphome/core/hal.h"
 #include "esphome/core/helpers.h"
 
+// Fallback for ESPHome < 2026.10.0
+#ifndef ESPHOME_LOG_TAG
+#define ESPHOME_LOG_TAG(name, tag) static const char *const name = tag
+#endif
+
 namespace esphome::aesgi_rs485 {
 
-static const char *const TAG = "aesgi_rs485";
+ESPHOME_LOG_TAG(TAG, "aesgi_rs485");
 
 void AesgiRs485::setup() {
   if (this->flow_control_pin_ != nullptr) {

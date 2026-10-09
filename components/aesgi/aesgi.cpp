@@ -2,9 +2,14 @@
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 
+// Fallback for ESPHome < 2026.10.0
+#ifndef ESPHOME_LOG_TAG
+#define ESPHOME_LOG_TAG(name, tag) static const char *const name = tag
+#endif
+
 namespace esphome::aesgi {
 
-static const char *const TAG = "aesgi";
+ESPHOME_LOG_TAG(TAG, "aesgi");
 
 static const uint8_t MAX_NO_RESPONSE_COUNT = 5;
 
