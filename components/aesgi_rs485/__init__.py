@@ -6,6 +6,7 @@ from esphome.const import CONF_ADDRESS, CONF_FLOW_CONTROL_PIN, CONF_ID
 
 DEPENDENCIES = ["uart"]
 CODEOWNERS = ["@syssi"]
+DOMAIN = "aesgi_rs485"
 MULTI_CONF = True
 
 aesgi_rs485_ns = cg.esphome_ns.namespace("aesgi_rs485")
