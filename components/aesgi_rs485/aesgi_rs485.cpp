@@ -12,6 +12,8 @@ namespace esphome::aesgi_rs485 {
 
 ESPHOME_LOG_TAG(TAG, "aesgi_rs485");
 
+static constexpr size_t MAX_HEX_DUMP_BYTES = 100;
+
 void AesgiRs485::setup() {
   if (this->flow_control_pin_ != nullptr) {
     this->flow_control_pin_->setup();
@@ -22,8 +24,8 @@ void AesgiRs485::setup() {
 void AesgiRs485::loop() {
   const uint32_t now = millis();
   if (now - this->last_aesgi_rs485_byte_ > this->rx_timeout_) {
-    ESP_LOGVV(TAG, "Buffer cleared due to timeout: %s",
-              format_hex_pretty(&this->rx_buffer_.front(), this->rx_buffer_.size()).c_str());  // NOLINT
+    char hex_buf[format_hex_pretty_size(MAX_HEX_DUMP_BYTES)];
+    ESP_LOGVV(TAG, "Buffer cleared due to timeout: %s", format_hex_pretty_to(hex_buf, this->rx_buffer_, '.'));
     this->rx_buffer_.clear();
     this->last_aesgi_rs485_byte_ = now;
   }
@@ -34,8 +36,8 @@ void AesgiRs485::loop() {
     if (this->parse_aesgi_rs485_byte_(byte)) {
       this->last_aesgi_rs485_byte_ = now;
     } else {
-      ESP_LOGVV(TAG, "Buffer cleared due to reset: %s",
-                format_hex_pretty(&this->rx_buffer_.front(), this->rx_buffer_.size()).c_str());  // NOLINT
+      char hex_buf[format_hex_pretty_size(MAX_HEX_DUMP_BYTES)];
+      ESP_LOGVV(TAG, "Buffer cleared due to reset: %s", format_hex_pretty_to(hex_buf, this->rx_buffer_, '.'));
       this->rx_buffer_.clear();
     }
   }
