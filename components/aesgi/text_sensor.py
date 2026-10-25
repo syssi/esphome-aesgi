@@ -5,13 +5,17 @@ from esphome.const import ENTITY_CATEGORY_DIAGNOSTIC
 
 from . import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID
 
+try:
+    from esphome.components.const import CONF_DEVICE_TYPE
+except ImportError:
+    CONF_DEVICE_TYPE = "device_type"
+
 DEPENDENCIES = ["aesgi"]
 
 CODEOWNERS = ["@syssi"]
 
 CONF_ERRORS = "errors"
 CONF_OPERATION_MODE = "operation_mode"
-CONF_DEVICE_TYPE = "device_type"
 
 TEXT_SENSORS = [
     CONF_OPERATION_MODE,
