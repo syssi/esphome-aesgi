@@ -15,15 +15,17 @@ from esphome.const import (
 )
 
 from .. import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID, aesgi_ns
+from ..const import (
+    CONF_BATTERY_CURRENT_LIMIT,
+    CONF_BATTERY_VOLTAGE_LIMIT,
+    CONF_OUTPUT_POWER_THROTTLE,
+)
 
 DEPENDENCIES = ["aesgi"]
 
 CODEOWNERS = ["@syssi"]
 
-CONF_OUTPUT_POWER_THROTTLE = "output_power_throttle"
 CONF_OUTPUT_POWER_THROTTLE_BROADCAST = "output_power_throttle_broadcast"
-CONF_BATTERY_VOLTAGE_LIMIT = "battery_voltage_limit"
-CONF_BATTERY_CURRENT_LIMIT = "battery_current_limit"
 
 NUMBERS = {
     CONF_OUTPUT_POWER_THROTTLE: ord("L"),
