@@ -7,7 +7,7 @@ from . import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID
 
 try:
     from esphome.components.const import CONF_DEVICE_TYPE
-except ImportError:
+except ImportError:  # ESPHome < 2026.11.0
     CONF_DEVICE_TYPE = "device_type"
 
 DEPENDENCIES = ["aesgi"]
