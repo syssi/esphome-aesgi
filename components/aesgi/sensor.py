@@ -28,6 +28,11 @@ from esphome.const import (
 )
 
 from . import AESGI_COMPONENT_SCHEMA, CONF_AESGI_ID
+from .const import (
+    CONF_BATTERY_CURRENT_LIMIT,
+    CONF_BATTERY_VOLTAGE_LIMIT,
+    CONF_OUTPUT_POWER_THROTTLE,
+)
 
 DEPENDENCIES = ["aesgi"]
 
@@ -43,9 +48,6 @@ CONF_AC_POWER = "ac_power"
 CONF_DEVICE_TEMPERATURE = "device_temperature"
 CONF_ENERGY_TODAY = "energy_today"
 CONF_AUTO_TEST_RESULT = "auto_test_result"
-CONF_OUTPUT_POWER_THROTTLE = "output_power_throttle"
-CONF_BATTERY_CURRENT_LIMIT = "battery_current_limit"
-CONF_BATTERY_VOLTAGE_LIMIT = "battery_voltage_limit"
 CONF_UPTIME = "uptime"
 CONF_AC_VOLTAGE_NOMINAL = "ac_voltage_nominal"
 CONF_AC_FREQUENCY_NOMINAL = "ac_frequency_nominal"
