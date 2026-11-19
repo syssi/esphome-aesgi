@@ -16,7 +16,7 @@ BUTTONS = {
     CONF_OPERATION_MODE_PV: ord("B"),
 }
 
-AesgiButton = aesgi_ns.class_("AesgiButton", button.Button, cg.Component)
+AesgiButton = aesgi_ns.class_("AesgiButton", button.Button)
 
 CONFIG_SCHEMA = AESGI_COMPONENT_SCHEMA.extend(
     {
@@ -36,6 +36,5 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             var = await button.new_button(conf)
-            await cg.register_component(var, conf)
             cg.add(var.set_parent(hub))
             cg.add(var.set_holding_register(address))
